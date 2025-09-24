@@ -56,7 +56,7 @@ SEMTEC convierte el aprendizaje de las matemáticas en una experiencia divertida
 - Tutor  
 
 
-## Instalación y Despliegue
+## Instalación
 
 1. **Clonar repositorio**
 
@@ -64,10 +64,10 @@ git clone https://github.com/walner-prog/SEMTEC.git
 cd semtec
 
 
-## Instalación y Despliegue
+## Despliegue
 
-Clonar repositorio y ejecutar todos los pasos de instalación y despliegue en un solo flujo:
+ ejecutar todos los pasos de despliegue en un solo flujo:
 
 
-git clone https://github.com/walner-prog/SEMTEC.git && cd semtec && composer install && npm install && npm run build && cp .env.example .env && php artisan migrate --seed && php artisan key:generate && php artisan serve
+ composer install && npm install && npm run build && cp .env.example .env && php artisan migrate --seed && php artisan key:generate && php artisan serve
 
