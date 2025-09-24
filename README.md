@@ -6,7 +6,7 @@ SEMTEC es una plataforma educativa inclusiva diseñada para democratizar el apre
 
 Integra tecnología accesible, lenguaje de señas y gamificación para garantizar que todos los estudiantes, incluyendo aquellos con discapacidad visual o auditiva, tengan las mismas oportunidades de aprender.
 
----
+
 
 ## Características disruptivas
 
@@ -17,7 +17,7 @@ Integra tecnología accesible, lenguaje de señas y gamificación para garantiza
 
 SEMTEC convierte el aprendizaje de las matemáticas en una experiencia divertida, accesible y alineada con el programa oficial de estudios, asegurando que ningún estudiante quede atrás.
 
----
+
 
 ## Público objetivo
 
@@ -25,7 +25,7 @@ SEMTEC convierte el aprendizaje de las matemáticas en una experiencia divertida
 - Docentes y tutores que requieren herramientas inclusivas.  
 - Administradores o directores educativos que gestionan contenidos y reportes.  
 
----
+
 
 ## Requerimientos Técnicos
 
@@ -55,11 +55,19 @@ SEMTEC convierte el aprendizaje de las matemáticas en una experiencia divertida
 - Estudiante  
 - Tutor  
 
----
 
 ## Instalación y Despliegue
 
 1. **Clonar repositorio**
-```bash
+
 git clone https://github.com/walner-prog/SEMTEC.git
 cd semtec
+
+
+## Instalación y Despliegue
+
+Clonar repositorio y ejecutar todos los pasos de instalación y despliegue en un solo flujo:
+
+
+git clone https://github.com/walner-prog/SEMTEC.git && cd semtec && composer install && npm install && npm run build && cp .env.example .env && php artisan migrate --seed && php artisan key:generate && php artisan serve
+
