@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-use App\Models\Escuela;
-use App\Models\Grado;
+ 
 use App\Models\Matricula;
  
 
