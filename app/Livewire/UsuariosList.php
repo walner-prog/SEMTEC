@@ -24,6 +24,10 @@ class UsuariosList extends Component
     // 🔹 Estado para menú de acciones
     public $menuAccionId = null;
 
+        // Búsqueda dinámica de tutores
+     public $searchTutor = '';
+     public $tutores = [];
+
     protected $paginationTheme = 'tailwind';
 
     public function updatingSearch()
@@ -44,6 +48,19 @@ class UsuariosList extends Component
         $this->menuAccionId = null;
     }
 
+
+    public function updatedSearchTutor()
+{
+    $this->tutores = \App\Models\User::role('Tutor')
+        ->where(function ($q) {
+            $q->where('name', 'like', '%' . $this->searchTutor . '%')
+              ->orWhere('username', 'like', '%' . $this->searchTutor . '%');
+        })
+        ->limit(10)
+        ->get();
+}
+
+
     // -------------------------------
     // 📌 CRUD
     // -------------------------------
@@ -58,7 +75,7 @@ class UsuariosList extends Component
                 'error',
                 "Ya alcanzaste el límite máximo de usuarios permitidos ({$totalUsuarios}/{$limite})."
             );
-            return; // ❌ No abre modal
+            return; 
         }
 
         $this->resetForm();
@@ -88,11 +105,10 @@ class UsuariosList extends Component
     {
         if ($this->modo === 'crear') {
 
-            
-             $role = \Spatie\Permission\Models\Role::find($this->form->role_id);
-            // Si intenta asignar "Administrador" y ya existe uno, bloquear la acción
+            $role = \Spatie\Permission\Models\Role::find($this->form->role_id);
+
             if ($role && $role->name === 'Administrador' && $this->form->ComprobarSiYaExixteUsuarioAdministrador()) {
-                session()->flash('error', '⚠️ Ya existe un usuario con rol Administrador.');
+                session()->flash('error', ' Ya existe un usuario con rol Administrador.');
 
                 $this->resetForm();
                 $this->isOpen = false;
@@ -100,10 +116,10 @@ class UsuariosList extends Component
             }
 
             $this->form->store();
-            session()->flash('create', '✅ Usuario creado correctamente.');
+            session()->flash('create', ' Usuario creado correctamente.');
         } else {
             $this->form->update();
-            session()->flash('update', '✏️ Usuario actualizado correctamente.');
+            session()->flash('update', ' Usuario actualizado correctamente.');
         }
 
         $this->resetForm();
@@ -111,7 +127,7 @@ class UsuariosList extends Component
     }
 
     // -------------------------------
-    // 📌 Eliminar
+    //  Eliminar
     // -------------------------------
     public function confirmarEliminar($id)
     {
@@ -124,9 +140,9 @@ class UsuariosList extends Component
     {
         $usuario = User::findOrFail($this->usuarioIdAEliminar);
 
-        // Bloquear eliminación de Administrador o email específico
-        if ($usuario->roles->contains('name', 'Administrador') || $usuario->email === 'ca140611@gmail.com') {
-            session()->flash('error', '⚠️ No puedes eliminar al usuario administrador.');
+        // Bloquear eliminación de Administrador  
+        if ($usuario->roles->contains('name', 'Administrador')) {
+            session()->flash('error', ' No puedes eliminar al usuario administrador.');
             $this->modalConfirmar = false;
             $this->usuarioIdAEliminar = null;
             return;
@@ -136,7 +152,7 @@ class UsuariosList extends Component
 
         // Eliminación segura
         $usuario->delete();
-        session()->flash('delete', '🗑️ Usuario eliminado correctamente.');
+        session()->flash('delete', ' Usuario eliminado correctamente.');
         $this->resetPage();
 
         $this->modalConfirmar = false;
@@ -149,8 +165,8 @@ class UsuariosList extends Component
         $this->form->usuario = null;
     }
 
-    // -------------------------------
-    // 📌 Ver Detalles
+   
+    //  Ver Detalles
     // -------------------------------
     public function abrirModalVer($id)
     {

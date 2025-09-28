@@ -48,11 +48,21 @@ class UsuarioForm extends Form
     public $accesibilidad = [];
     public $docente_id = null;
 
+    //para Tutor
+    public $tutor_id = null;
+
+
+
+
     public function mount()
     {
         $this->roles = Role::orderBy('name')->get();
        
     }
+
+
+
+ 
 
 
       // Verifica si ya existe un usuario con rol Administrador antes de asignar ese rol a otro usuario
@@ -104,6 +114,7 @@ class UsuarioForm extends Form
                 $rules['grado_id'] = ['required', 'exists:grados,id'];
                 $rules['seccion'] = ['required', 'string', 'max:2'];
                 $rules['docente_id'] = ['required', 'exists:users,id'];
+                 $rules['tutor_id'] = ['required', 'exists:users,id'];
             }
         }
 
@@ -143,6 +154,7 @@ class UsuarioForm extends Form
                 $this->seccion = $matricula->seccion;
                 $this->docente_id = $matricula->docente_id;
             }
+            $this->tutor_id = $usuario->tutor_id;
 
             // Accesibilidad
             $this->accesibilidad = json_decode($usuario->preferencias_accesibilidad, true) ?? [];
@@ -264,6 +276,7 @@ class UsuarioForm extends Form
         if ($role->name === 'Estudiante') {
             $usuario->update([
                 'escuela_id' => $this->escuela_id,
+                'tutor_id'   => $this->tutor_id,
                 'preferencias_accesibilidad' => json_encode($this->accesibilidad),
             ]);
 

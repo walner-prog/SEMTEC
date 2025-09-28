@@ -19,4 +19,10 @@ class Escuela extends Model
     public function matriculas() {
         return $this->hasMany(Matricula::class);
     }
+
+    public function escuela()
+{
+    return $this->belongsTo(Escuela::class);
+}
+
 }

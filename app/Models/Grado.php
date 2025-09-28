@@ -25,4 +25,10 @@ public function docentes() {
 public function estudiantes() {
     return $this->belongsToMany(User::class, 'grado_user')->whereDoesntHave('roles', fn($q) => $q->where('name', 'Docente'));
 }
+
+public function grados()
+{
+    return $this->hasMany(Grado::class);
+}
+
 }

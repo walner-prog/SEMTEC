@@ -12,16 +12,16 @@ return new class extends Migration {
             $table->foreignId('indicador_id')->constrained('indicadores')->cascadeOnDelete();
             $table->string('titulo');
             $table->text('objetivo')->nullable();
-            $table->string('tipo')->default('practica'); // practica, cronometro, problema
-            $table->json('accesibilidad_flags')->nullable(); // ej: {"tts":true,"isn":false}
-            $table->string('media_video')->nullable(); // YouTube, Vimeo, etc.
-            $table->string('media_documento')->nullable(); // PDF, PPT, imagen
+            $table->string('tipo')->default('practica');  
+            $table->json('accesibilidad_flags')->nullable();  
+            $table->string('media_video')->nullable(); 
+            $table->string('media_documento')->nullable(); 
 
             $table->unsignedTinyInteger('dificultad_min')->default(1);
             $table->unsignedTinyInteger('dificultad_max')->default(3);
             $table->unsignedSmallInteger('orden')->default(0);
             $table->boolean('con_tiempo')->default(false);
-            $table->integer('limite_tiempo')->nullable(); // en minutos
+            $table->integer('limite_tiempo')->nullable();  
 
             $table->timestamps();
             $table->softDeletes();

@@ -18,7 +18,8 @@ return new class extends Migration
     $table->string('username')->unique(); // ← Nuevo campo para login
     $table->string('email')->unique()->nullable(); // email ahora es nullable
     $table->json('preferencias_accesibilidad')->nullable();
- $table->foreignId('escuela_id')->nullable()->constrained('escuelas')->cascadeOnDelete();
+    $table->foreignId('escuela_id')->nullable()->constrained('escuelas')->cascadeOnDelete();
+     $table->foreignId('tutor_id')->nullable()->constrained('users');
     $table->timestamp('email_verified_at')->nullable();
     $table->string('password');
     

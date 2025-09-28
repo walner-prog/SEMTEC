@@ -32,6 +32,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'tutor_id',
         'email',
         'password',
         'profile_photo_path',
@@ -110,8 +111,20 @@ public function estadisticas()
 }
 
 
+// Un tutor puede tener varios hijos
+public function hijos()
+{
+    return $this->hasMany(User::class, 'tutor_id');
+}
 
-   // En tu modelo User (usualmente en `app/Models/User.php`):
+// Un estudiante pertenece a un tutor
+public function tutor()
+{
+    return $this->belongsTo(User::class, 'tutor_id');
+}
+
+
+ 
 
 public function getProfilePhotoUrlAttribute(): string
 {

@@ -55,12 +55,13 @@ Route::get('/artisan/{command}', function ($command) {
 
 // Página de login
 Route::get('/login', function () {
-    return view('welcome'); // tu vista de login
+     // tu vista de login
 })->middleware('guest')->name('login');
 
 // Redirigir la raíz "/" según el estado de autenticación
 Route::get('/', function () {
-    return redirect()->route(auth()->check() ? 'dashboard' : 'login');
+   // return redirect()->route(auth()->check() ? 'dashboard' : 'login');
+   return view('welcome');
 });
 
 // Dashboard
@@ -69,7 +70,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
- Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
 
 // Agrupamos todas las rutas protegidas
 Route::middleware('auth')->group(function () {
@@ -78,7 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:Administrador')->group(function () {
         Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
         Route::get('/roles', [RolController::class, 'index'])->name('roles');
-       
+
+
         Route::get('/configuraciones', [ConfiguracionController::class, 'index'])->name('configuraciones.index');
 
       
@@ -97,7 +98,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/mision', [PageController::class, 'mision'])->name('mision');
 Route::get('/vision', [PageController::class, 'vision'])->name('vision');
 Route::get('/juegos', [PageController::class, 'juegos'])->name('juegos.index');
-
+Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
 Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
 Route::get('/ia', [PageController::class, 'ia'])->name('ia');
 

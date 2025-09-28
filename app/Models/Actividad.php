@@ -23,8 +23,8 @@ class Actividad extends Model
         'dificultad_min',
         'dificultad_max',
         'orden',
-         'con_tiempo',     
-        'limite_tiempo', 
+        'con_tiempo',
+        'limite_tiempo',
     ];
 
     protected $casts = [

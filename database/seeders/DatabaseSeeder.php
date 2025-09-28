@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Datos básicos del sistema
         $this->call(RolesSeeder::class);
-        $this->call(UserSeeder::class);
+       // $this->call(UserSeeder::class);
         $this->call(PermissionsSeeder::class);
       
         $this->call(ConfiguracionSeeder::class);

@@ -4,9 +4,10 @@ namespace App\Livewire\Dashboard;
 
 use Livewire\Component;
 
-class DocenteDashboard extends Component
+class AdministradorDashboard extends Component
 {
-    public $tab = 'panel'; 
+
+      public $tab = 'panel'; 
 
     protected $queryString = ['tab']; 
 
@@ -14,9 +15,8 @@ class DocenteDashboard extends Component
     {
         $this->tab = $tab;
     }
-
     public function render()
     {
-        return view('livewire.dashboard.docente-dashboard');
+        return view('livewire.dashboard.administrador-dashboard');
     }
 }

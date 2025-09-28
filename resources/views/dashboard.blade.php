@@ -16,19 +16,24 @@
 
             <main class="p-6 flex-1 space-y-6">
 
-                {{-- 📚 DOCENTE --}}
+                
                 @role('Docente')
                 @livewire('dashboard.docente-dashboard')
                 @endrole
 
-                {{-- 🎓 ESTUDIANTE --}}
+                
                 @role('Estudiante')
                 @livewire('dashboard.estudiante-dashboard')
                 @endrole
 
-                {{-- 👨‍👩‍👧 TUTOR --}}
+                 
                 @role('Tutor')
                 @livewire('dashboard.tutor-dashboard')
+                @endrole
+
+                
+                @role('Administrador')
+                @livewire('dashboard.administrador-dashboard')
                 @endrole
 
 

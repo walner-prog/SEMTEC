@@ -46,23 +46,38 @@ class Juegos extends Component
         $this->trofeos = $estadisticas->trofeos;
     }
 
-    public function render()
-    {
-        $juegos = Juego::withCount([
-            'reacciones as me_gusta_count' => fn($q) => $q->where('tipo', 'me_gusta'),
-            'reacciones as corazon_count' => fn($q) => $q->where('tipo', 'corazon')
-        ])->get();
+   public function render()
+{
+    $user = Auth::user();
 
-        $user = Auth::user();
-        $juegosDisponibles = $juegos->where('bloqueado', false);
-        $juegosBloqueados  = $juegos->where('bloqueado', true);
+    // Traemos todos los juegos con sus contadores
+    $juegos = Juego::withCount([
+        'reacciones as me_gusta_count' => fn($q) => $q->where('tipo', 'me_gusta'),
+        'reacciones as corazon_count' => fn($q) => $q->where('tipo', 'corazon')
+    ]);
 
-        return view('livewire.juegos', [
-            'juegosDisponibles' => $juegosDisponibles,
-            'juegosBloqueados'  => $juegosBloqueados,
-            'user' => $user
-        ]);
+    // Si el usuario es estudiante, filtramos por nivel
+    if ($user->hasRole('Estudiante')) {
+        $matricula = $user->matriculas()->latest()->first();
+        $nivel = $matricula?->grado; // el grado del estudiante corresponde al nivel del juego
+
+        if ($nivel) {
+            $juegos = $juegos->where('nivel', $nivel);
+        }
     }
+
+    $juegos = $juegos->get();
+
+    $juegosDisponibles = $juegos->where('bloqueado', false);
+    $juegosBloqueados  = $juegos->where('bloqueado', true);
+
+    return view('livewire.juegos', [
+        'juegosDisponibles' => $juegosDisponibles,
+        'juegosBloqueados'  => $juegosBloqueados,
+        'user' => $user
+    ]);
+}
+
 
 
 

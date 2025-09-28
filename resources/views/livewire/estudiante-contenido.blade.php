@@ -88,10 +88,15 @@
                         <span class="text-gray-700 dark:text-gray-300">Traducciones rápidas</span>
                     </li>
                 </ul>
-                <button
+                <button wire:click="$dispatch('abrirModalIA', { userId: {{ Auth::id() }} })"
                     class="mt-4 w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow flex items-center justify-center gap-2">
                     <i class="fas fa-brain"></i> Probar IA
                 </button>
+
+
+                @livewire('interaccion-i-a')
+
+
             </div>
 
             {{-- 📰 Noticias & Tips --}}
@@ -166,33 +171,43 @@
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-3xl shadow-2xl w-11/12 md:w-2/3 max-h-[90vh] overflow-y-auto p-6 relative"
+
+        <!-- Modal -->
+        <div class="bg-white rounded-3xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 
+        max-h-[95vh] overflow-y-auto p-6 relative"
             style="font-size: {{ $fontSize }}px; {{ $highContrast ? 'background-color:#000;color:#fff;' : '' }}">
 
-            <!-- Ajuste tipografía -->
+            <!-- Ajustes accesibilidad -->
             @if($accesibilidad['isn'])
-            <div class="mb-4 flex justify-center items-center gap-2 flex-wrap">
-                <span class="font-semibold">✏️ Ajustar tamaño de texto:</span>
+            <div class="mb-4 flex justify-center items-center gap-3 flex-wrap text-lg">
+                <span class="font-semibold flex items-center gap-2"><i class="fas fa-universal-access text-2xl"></i>
+                    Ajustes:</span>
                 <button wire:click="disminuirFont"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">A-</button>
+                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
+                    <i class="fas fa-minus-circle text-xl"></i> A-
+                </button>
                 <button wire:click="aumentarFont"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">A+</button>
+                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
+                    <i class="fas fa-plus-circle text-xl"></i> A+
+                </button>
                 <button wire:click="toggleHighContrast"
-                    class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">⚡ Contraste</button>
+                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
+                    <i class="fas fa-adjust text-xl"></i> Contraste
+                </button>
             </div>
             @endif
 
-
-            <div class="text-center mb-4">
-                <h3 class="font-extrabold text-3xl text-blue-600 animate-bounce">Actividad: {{
-                    $actividadSeleccionada->titulo }}
+            <!-- Título actividad -->
+            <div class="text-center mb-6">
+                <h3 class="font-extrabold text-3xl md:text-4xl text-blue-600 flex items-center justify-center gap-3">
+                    <i class="fas fa-gamepad text-4xl"></i> {{ $actividadSeleccionada->titulo }}
                 </h3>
-                <p class="text-lg text-green-700 font-semibold mt-2 animate-fadeIn">Objetivo: {{
-                    $actividadSeleccionada->objetivo
-                    }}</p>
+                <p class="text-lg md:text-xl text-green-700 font-semibold mt-3">
+                    <i class="fas fa-bullseye text-2xl"></i> {{ $actividadSeleccionada->objetivo }}
+                </p>
             </div>
 
-            <!-- Media animada -->
+            <!-- Multimedia -->
             @if($actividadSeleccionada->media_video || $actividadSeleccionada->media_documento)
             <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 @if($actividadSeleccionada->media_video)
@@ -250,123 +265,117 @@
             </div>
             @endif
 
-            @if(!$actividadFinalizada)
 
-            <div class="mb-6 flex justify-center gap-2">
+
+            @if(!$actividadFinalizada)
+            <!-- Progreso -->
+            <div class="mb-6 flex justify-center flex-wrap gap-3">
                 @foreach(range(1,count($items)) as $i)
                 <div
-                    class="w-10 h-10 rounded-full flex items-center justify-center 
-                        {{ $i<=$itemIndex ? 'bg-green-400 text-white shadow-lg animate-bounce' : 'bg-gray-300 text-gray-500' }} transition-all">
+                    class="w-12 h-12 text-lg rounded-full flex items-center justify-center 
+                {{ $i<=$itemIndex ? 'bg-green-500 text-white shadow-lg animate-bounce' : 'bg-gray-300 text-gray-600' }}">
                     {{ $i }}
                 </div>
                 @endforeach
             </div>
 
-
+            <!-- Pregunta -->
             <div
-                class="p-5 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 rounded-3xl shadow-xl text-center mb-6 transform hover:scale-100 transition-all duration-300 animate-fadeIn">
+                class="p-6 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 rounded-3xl shadow-xl text-center mb-6">
+
                 @if($accesibilidad['tts'])
                 <button wire:click="leerEnunciado"
-                    class="px-4 py-2 bg-blue-500 text-white rounded-full mb-3 hover:bg-blue-600 transition shadow-md">
-                    🔊 Escuchar enunciado
+                    class="px-5 py-2 bg-blue-500 text-white rounded-full mb-4 hover:bg-blue-600 transition shadow-md flex items-center gap-2">
+                    <i class="fas fa-volume-up text-xl"></i> Escuchar
                 </button>
                 @endif
 
-                <h4 class="font-bold text-blue-700 mb-3 flex items-center justify-center gap-2 text-xl">
-                    <i class="fas fa-question-circle"></i> Pregunta {{ $itemIndex+1 }}
+                <h4 class="font-bold text-blue-700 mb-3 flex items-center justify-center gap-2 text-xl md:text-2xl">
+                    <i class="fas fa-question-circle text-2xl"></i> Pregunta {{ $itemIndex+1 }}
                 </h4>
 
-                <p class="text-gray-800 mb-4 text-lg">{{ $items[$itemIndex]['enunciado'] }}</p>
+                <p class="text-gray-800 mb-5 text-lg md:text-xl">{{ $items[$itemIndex]['enunciado'] }}</p>
 
-                <!-- Botones de ayuda IA -->
-                <div class="flex justify-center gap-4 mb-4 animate-fadeIn">
-                    <button
-                        class="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2"
-                        title="Pide ayuda con IA">
-                        🤖 Pista IA
+                <!-- Botones ayuda IA -->
+                <div class="flex justify-center gap-4 mb-5 flex-wrap">
+                    <button wire:click="generarPista"
+                        class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <i class="fas fa-lightbulb text-2xl"></i> Pista
                     </button>
-                    <button
-                        class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2"
-                        title="Explicación de la pregunta">
-                        📘 Explicación IA
+                    <button wire:click="pedirExplicacion"
+                        class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <i class="fas fa-book-open text-2xl"></i> Explicación
                     </button>
                 </div>
 
-                <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
-                    class="w-full border-2 border-blue-400 rounded-full p-3 focus:ring focus:ring-green-300 shadow-md">
+                <!-- IA Feedback -->
+                @if($pistaIA)
+                <div class="mb-3 p-3 bg-purple-100 text-purple-800 rounded-xl shadow-md">
+                    <i class="fas fa-info-circle"></i> <strong>Pista:</strong> {{ $pistaIA }}
+                </div>
+                @endif
+                @if($explicacionIA)
+                <div class="mb-3 p-3 bg-indigo-100 text-indigo-800 rounded-xl shadow-md">
+                    <i class="fas fa-book"></i> <strong>Explicación:</strong> {{ $explicacionIA }}
+                </div>
+                @endif
 
+                <!-- Respuesta -->
+                <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
+                    class="w-full border-2 border-blue-400 rounded-full p-4 text-lg focus:ring focus:ring-green-300 shadow-md">
 
                 @if($respuesta!==null)
                 @if($respuesta==$items[$itemIndex]['respuesta'])
                 <div
-                    class="mt-3 text-green-700 font-bold flex items-center justify-center gap-2 animate-bounce text-lg">
-                    <i class="fas fa-check-circle text-2xl"></i> ¡Correcto!
+                    class="mt-4 text-green-700 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
+                    <i class="fas fa-check-circle text-3xl"></i> ¡Correcto!
                 </div>
                 @else
-                <div class="mt-3 text-red-600 font-bold flex items-center justify-center gap-2 animate-bounce text-lg">
-                    <i class="fas fa-times-circle text-2xl"></i> Incorrecto: <span class="underline">{{
+                <div class="mt-4 text-red-600 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
+                    <i class="fas fa-times-circle text-3xl"></i> Incorrecto: <span class="underline">{{
                         $items[$itemIndex]['respuesta'] }}</span>
                 </div>
                 @endif
                 @endif
             </div>
 
-            <!-- Botones -->
+            <!-- Navegación -->
             <div class="flex justify-between mb-4">
                 <button wire:click="cerrarModal"
-                    class="px-5 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-full shadow-md transition">
-                    <i class="fas fa-times"></i> Cerrar
+                    class="px-6 py-3 bg-gray-400 hover:bg-gray-500 text-white rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                    <i class="fas fa-times"></i> Salir
                 </button>
                 <button wire:click="siguienteItem"
-                    class="px-5 py-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-md transition">
-                    {{ $itemIndex < count($items)-1 ? '➡️ Siguiente' : '🏁 Finalizar' }} </button>
+                    class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                    <i class="fas fa-arrow-right"></i> {{ $itemIndex < count($items)-1 ? 'Siguiente' : 'Finalizar' }}
+                        </button>
             </div>
             @else
-            <!-- Resultados finales con confeti -->
+            <!-- Resultados -->
             <div x-init="$nextTick(()=>showConfetti=true)"
-                class="p-6 bg-gradient-to-r from-green-300 via-blue-200 to-green-300 rounded-3xl shadow-2xl text-center mb-6 animate-fadeIn">
-                <h4 class="font-extrabold text-3xl text-green-800 mb-4">🏆 ¡Resultados!</h4>
-                <p class="mb-2 text-lg">Correctas: <span class="font-bold text-green-700">{{ $respuestasCorrectas
+                class="p-6 bg-gradient-to-r from-green-300 via-blue-200 to-green-300 rounded-3xl shadow-2xl text-center mb-6">
+                <h4 class="font-extrabold text-3xl md:text-4xl text-green-800 mb-4"><i
+                        class="fas fa-trophy text-4xl"></i> ¡Resultados!</h4>
+                <p class="mb-3 text-xl">✅ Correctas: <span class="font-bold text-green-700">{{ $respuestasCorrectas
                         }}</span></p>
-                <p class="mb-2 text-lg">Incorrectas: <span class="font-bold text-red-600">{{ $respuestasIncorrectas
+                <p class="mb-3 text-xl">❌ Incorrectas: <span class="font-bold text-red-600">{{ $respuestasIncorrectas
                         }}</span></p>
-                <p class="mb-4 text-lg">Puntaje: <span class="font-bold text-blue-700">{{ $puntajeFinal }} / {{
+                <p class="mb-5 text-xl">📊 Puntaje: <span class="font-bold text-blue-700">{{ $puntajeFinal }} / {{
                         count($items) }}</span></p>
-
-                @if($respuestasCorrectas==count($items))
-                <div class="text-green-700 font-extrabold text-xl animate-bounce">🌟 ¡Excelente trabajo! Todo correcto.
-                </div>
-                @elseif($respuestasCorrectas>=(count($items)/2))
-                <div class="text-yellow-600 font-bold text-xl animate-bounce">💡 ¡Muy bien! Solo un poco más de
-                    práctica.</div>
-                @else
-                <div class="text-red-600 font-bold text-xl animate-bounce">📚 Sigue practicando, ¡lo lograrás!</div>
-                @endif
             </div>
-
-            <!-- Confeti -->
-            <template x-if="showConfetti">
-                <div class="absolute inset-0 pointer-events-none">
-                    <div class="confetti animate-fall" style="--i:0;"></div>
-                    <div class="confetti animate-fall" style="--i:1;"></div>
-                    <div class="confetti animate-fall" style="--i:2;"></div>
-                    <div class="confetti animate-fall" style="--i:3;"></div>
-                    <div class="confetti animate-fall" style="--i:4;"></div>
-                </div>
-            </template>
 
             <!-- Botón cerrar -->
             <div class="flex justify-center mb-4">
                 <button wire:click="cerrarModal"
-                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-md transition">
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
                     <i class="fas fa-check"></i> Listo
                 </button>
             </div>
             @endif
-
         </div>
     </div>
     @endif
+
 
     <!-- CSS Confeti (Tailwind + custom) -->
     <style>

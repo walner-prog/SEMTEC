@@ -4,7 +4,8 @@
 
     <!-- Solo visible en escritorio -->
     <div class="hidden lg:flex justify-between items-center gap-4">
-        <button wire:click="abrirModalCrear" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
+        <button wire:click="abrirModalCrear"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
             + Nuevo Usuario
         </button>
         <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email..." class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-full sm:w-1/3 
@@ -13,7 +14,8 @@
 
     <!-- Solo visible en móvil/tablet -->
     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 lg:hidden">
-        <button wire:click="abrirModalCrear" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
+        <button wire:click="abrirModalCrear"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
             + Nuevo Usuario
         </button>
         <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email..." class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-full sm:w-1/3 
@@ -23,25 +25,29 @@
 
     {{-- Notificaciones --}}
     @if (session()->has('create'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" class="session-message bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 p-3 mt-4 rounded-lg shadow-md">
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+        class="session-message bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 p-3 mt-4 rounded-lg shadow-md">
         {{ session('create') }}
     </div>
     @endif
 
     @if (session()->has('update'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" class="session-message bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200 p-3 mt-4 rounded-lg shadow-md">
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+        class="session-message bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200 p-3 mt-4 rounded-lg shadow-md">
         {{ session('update') }}
     </div>
     @endif
 
     @if (session()->has('delete'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" class="session-message bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+        class="session-message bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
         {{ session('delete') }}
     </div>
     @endif
 
     @if (session()->has('error'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
+    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+        class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
         {{ session('error') }}
     </div>
     @endif
@@ -62,12 +68,15 @@
             </thead>
             <tbody class="bg-white dark:bg-gray-800">
                 @forelse ($usuarios as $usuario)
-                <tr wire:key="usuario-{{ $usuario->id }}" class="border-b dark:border-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition">
+                <tr wire:key="usuario-{{ $usuario->id }}"
+                    class="border-b dark:border-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition">
                     <td class="p-3">
                         @if ($usuario->profile_photo_path)
-                        <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}" class="h-10 w-10 rounded-full object-cover">
+                        <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}"
+                            class="h-10 w-10 rounded-full object-cover">
                         @else
-                        <i class="fas fa-user h-10 w-10 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
+                        <i
+                            class="fas fa-user h-10 w-10 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
                         @endif
                     </td>
                     <td class="p-3">{{ $usuario->name }}</td>
@@ -81,14 +90,20 @@
                         @endforeach
                     </td>
                     <td class="p-3 flex flex-wrap gap-2">
-                        <button wire:click="abrirModalEditar({{ $usuario->id }})" class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center" title="Editar">
+                        <button wire:click="abrirModalEditar({{ $usuario->id }})"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center"
+                            title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button wire:click="abrirModalVer({{ $usuario->id }})" class="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center" title="Detalles">
+                        <button wire:click="abrirModalVer({{ $usuario->id }})"
+                            class="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center"
+                            title="Detalles">
                             <i class="fas fa-eye"></i>
                         </button>
                         @if(!$usuario->roles->contains('name', 'Administrador'))
-                        <button wire:click="confirmarEliminar({{ $usuario->id }})" class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center" title="Eliminar">
+                        <button wire:click="confirmarEliminar({{ $usuario->id }})"
+                            class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 flex items-center justify-center"
+                            title="Eliminar">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                         @endif
@@ -107,14 +122,17 @@
 
     <div class="mt-6 grid grid-cols-1 gap-4 lg:hidden">
         @forelse ($usuarios as $usuario)
-        <div wire:key="mobile-usuario-{{ $usuario->id }}" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <div wire:key="mobile-usuario-{{ $usuario->id }}"
+            class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-4">
                     {{-- Foto o ícono de usuario --}}
                     @if ($usuario->profile_photo_path)
-                    <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}" class="h-12 w-12 rounded-full object-cover">
+                    <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}"
+                        class="h-12 w-12 rounded-full object-cover">
                     @else
-                    <i class="fas fa-user h-12 w-12 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
+                    <i
+                        class="fas fa-user h-12 w-12 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
                     @endif
                     <div>
                         <h4 class="font-bold text-gray-800 dark:text-gray-100">{{ $usuario->name }}</h4>
@@ -137,14 +155,17 @@
                     <div class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg 
                     bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10">
                         <div class="py-1">
-                            <button wire:click="abrirModalEditar({{ $usuario->id }})" class="text-gray-700 dark:text-gray-200 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <button wire:click="abrirModalEditar({{ $usuario->id }})"
+                                class="text-gray-700 dark:text-gray-200 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <i class="fas fa-edit mr-2"></i> Editar
                             </button>
-                            <button wire:click="abrirModalVer({{ $usuario->id }})" class="text-gray-700 dark:text-gray-200 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <button wire:click="abrirModalVer({{ $usuario->id }})"
+                                class="text-gray-700 dark:text-gray-200 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <i class="fas fa-eye mr-2"></i> Detalles
                             </button>
                             @unless($usuario->hasRole('Administrador'))
-                            <button wire:click="confirmarEliminar({{ $usuario->id }})" class="text-red-600 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <button wire:click="confirmarEliminar({{ $usuario->id }})"
+                                class="text-red-600 block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <i class="fas fa-trash-alt mr-2"></i> Eliminar
                             </button>
                             @endunless
@@ -156,7 +177,8 @@
             </div>
 
             {{-- Información Adicional --}}
-            <div class="mt-2 text-sm text-gray-600 dark:text-gray-400 border-t pt-2 border-gray-200 dark:border-gray-700">
+            <div
+                class="mt-2 text-sm text-gray-600 dark:text-gray-400 border-t pt-2 border-gray-200 dark:border-gray-700">
                 <p><strong>Usuario:</strong> {{ $usuario->username }}</p>
                 <div class="mt-1">
                     <strong>Roles:</strong>
@@ -186,259 +208,311 @@
     </div>
 
     {{-- Modal Crear / Editar --}}
-  @if ($isOpen)
-<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
-    <div class="bg-white dark:bg-gray-800 w-full max-w-lg p-6 rounded-2xl shadow-xl overflow-y-auto max-h-[80vh] relative">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
-            {{ $modo === 'crear' ? 'Crear Usuario' : 'Editar Usuario' }}
-        </h2>
+    @if ($isOpen)
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+        <div
+            class="bg-white dark:bg-gray-800 w-full max-w-lg p-6 rounded-2xl shadow-xl overflow-y-auto max-h-[80vh] relative">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+                {{ $modo === 'crear' ? 'Crear Usuario' : 'Editar Usuario' }}
+            </h2>
 
-        <form wire:submit.prevent="guardar" class="space-y-4 mb-16">
-            {{-- Nombre --}}
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
-                <input type="text" wire:model="form.name" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                @error('form.name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            {{-- Usuario --}}
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Usuario</label>
-                <input type="text" wire:model="form.username" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                @error('form.username') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            {{-- Email --}}
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Email (opcional)</label>
-                <input type="email" wire:model="form.email" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                @error('form.email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            {{-- Contraseña solo al crear --}}
-            @if($modo === 'crear' || $modo === 'editar')
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Contraseña</label>
-                <input type="password" wire:model="form.password" autocomplete="new-password" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                @error('form.password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-            @endif
-
-            {{-- Rol --}}
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Rol</label>
-                <select wire:model.live="form.role_id" class="border rounded w-full px-2 py-1 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona un rol --</option>
-                    @foreach($form->roles as $rol)
-                        <option value="{{ $rol->id }}">{{ ucfirst($rol->name) }}</option>
-                    @endforeach
-                </select>
-                @error('form.role_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            {{-- Cobrador: Cartera --}}
-            @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Cobrador')
-            <div>
-                <label for="cartera_id" class="block text-gray-700 dark:text-gray-300">Asignar Cartera</label>
-                <select wire:model.live="form.cartera_id" id="cartera_id" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona una Cartera --</option>
-                    @foreach($form->carteras as $cartera)
-                        <option value="{{ $cartera->id }}">{{ $cartera->nombre }}</option>
-                    @endforeach
-                </select>
-                @error('form.cartera_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-            @endif
-
-            {{-- Docente: Escuela y Grados --}}
-            @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Docente')
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Escuela</label>
-                <select wire:model.live="form.escuela_id" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona una Escuela --</option>
-                    @foreach(\App\Models\Escuela::all() as $escuela)
-                        <option value="{{ $escuela->id }}">{{ $escuela->nombre }}</option>
-                    @endforeach
-                </select>
-                @error('form.escuela_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Grados</label>
-                <select wire:model.live="form.grados" multiple class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    @foreach(\App\Models\Grado::all() as $grado)
-                        <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
-                    @endforeach
-                </select>
-                @error('form.grados') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-            @endif
-
-            {{-- Estudiante: Escuela, Grado, Sección, Docente, Accesibilidad --}}
-            @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Estudiante')
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Escuela</label>
-                <select wire:model.live="form.escuela_id" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona una Escuela --</option>
-                    @foreach(\App\Models\Escuela::all() as $escuela)
-                        <option value="{{ $escuela->id }}">{{ $escuela->nombre }}</option>
-                    @endforeach
-                </select>
-                @error('form.escuela_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Grado</label>
-                <select wire:model.live="form.grado_id" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona un Grado --</option>
-                    @foreach(\App\Models\Grado::all() as $grado)
-                        <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
-                    @endforeach
-                </select>
-                @error('form.grado_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Sección</label>
-                <input type="text" wire:model="form.seccion" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                @error('form.seccion') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Docente</label>
-                <select wire:model.live="form.docente_id" class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
-                    <option value="">-- Selecciona un Docente --</option>
-                    @foreach(\App\Models\User::role('Docente')->get() as $docente)
-                        <option value="{{ $docente->id }}">{{ $docente->name }}</option>
-                    @endforeach
-                </select>
-                @error('form.docente_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-            </div>
-
-            <div>
-                <label class="block text-gray-700 dark:text-gray-300">Preferencias de Accesibilidad</label>
-                <div class="flex gap-4 items-center mt-1">
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" wire:model="form.accesibilidad.tts">
-                        Texto a voz (TTS)
-                    </label>
-                    <label class="flex items-center gap-2">
-                        <input type="checkbox" wire:model="form.accesibilidad.high_contrast">
-                        Alto contraste
-                    </label>
+            <form wire:submit.prevent="guardar" class="space-y-4 mb-16">
+                {{-- Nombre --}}
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
+                    <input type="text" wire:model="form.name"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                    @error('form.name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
-            </div>
-            @endif
 
-            {{-- Botones --}}
-            <div class="flex justify-end gap-3 pt-4">
-                <button type="button" wire:click="$set('isOpen', false)" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
-                    Cancelar
-                </button>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
-                    <span>Guardar</span>
-                    <div wire:loading wire:target="guardar">
-                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                        </svg>
+                {{-- Usuario --}}
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Usuario</label>
+                    <input type="text" wire:model="form.username"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                    @error('form.username') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Email --}}
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Email (opcional)</label>
+                    <input type="email" wire:model="form.email"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                    @error('form.email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Contraseña solo al crear --}}
+                @if($modo === 'crear' || $modo === 'editar')
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Contraseña</label>
+                    <input type="password" wire:model="form.password" autocomplete="new-password"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                    @error('form.password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                @endif
+
+                {{-- Rol --}}
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Rol</label>
+                    <select wire:model.live="form.role_id"
+                        class="border rounded w-full px-2 py-1 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona un rol --</option>
+                        @foreach($form->roles as $rol)
+                        <option value="{{ $rol->id }}">{{ ucfirst($rol->name) }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.role_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Cobrador: Cartera --}}
+                @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Cobrador')
+                <div>
+                    <label for="cartera_id" class="block text-gray-700 dark:text-gray-300">Asignar Cartera</label>
+                    <select wire:model.live="form.cartera_id" id="cartera_id"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona una Cartera --</option>
+                        @foreach($form->carteras as $cartera)
+                        <option value="{{ $cartera->id }}">{{ $cartera->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.cartera_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                @endif
+
+                {{-- Docente: Escuela y Grados --}}
+                @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Docente')
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Escuela</label>
+                    <select wire:model.live="form.escuela_id"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona una Escuela --</option>
+                        @foreach(\App\Models\Escuela::all() as $escuela)
+                        <option value="{{ $escuela->id }}">{{ $escuela->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.escuela_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Grados</label>
+                    <select wire:model.live="form.grados" multiple
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        @foreach(\App\Models\Grado::all() as $grado)
+                        <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.grados') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+                @endif
+
+                {{-- Estudiante: Escuela, Grado, Sección, Docente, Accesibilidad --}}
+                @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Estudiante')
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Escuela</label>
+                    <select wire:model.live="form.escuela_id"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona una Escuela --</option>
+                        @foreach(\App\Models\Escuela::all() as $escuela)
+                        <option value="{{ $escuela->id }}">{{ $escuela->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.escuela_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Grado</label>
+                    <select wire:model.live="form.grado_id"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona un Grado --</option>
+                        @foreach(\App\Models\Grado::all() as $grado)
+                        <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.grado_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Sección</label>
+                    <input type="text" wire:model="form.seccion"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                    @error('form.seccion') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Docente</label>
+                    <select wire:model.live="form.docente_id"
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200">
+                        <option value="">-- Selecciona un Docente --</option>
+                        @foreach(\App\Models\User::role('Docente')->get() as $docente)
+                        <option value="{{ $docente->id }}">{{ $docente->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('form.docente_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Tutor</label>
+                    <input type="text" wire:model.live="searchTutor" placeholder="Buscar tutor..."
+                        class="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200" />
+
+                    @if(!empty($searchTutor))
+                    <ul class="bg-white dark:bg-gray-700 border rounded mt-1 max-h-48 overflow-y-auto">
+                        @foreach($tutores as $tutor)
+                        <li wire:click="$set('form.tutor_id', {{ $tutor->id }}); $set('searchTutor', '')"
+                            class="px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-600 cursor-pointer">
+                            {{ $tutor->name }} ({{ $tutor->username }})
+                        </li>
+
+                         
+                        @endforeach
+                    </ul>
+                    @endif
+
+                    @if($form->tutor_id)
+                    <p class="mt-2 text-sm text-green-600">
+                        Tutor seleccionado: {{ \App\Models\User::find($form->tutor_id)->name }}
+                    </p>
+                    @endif
+
+                    @error('form.tutor_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300">Preferencias de Accesibilidad</label>
+                    <div class="flex gap-4 items-center mt-1">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" wire:model="form.accesibilidad.tts">
+                            Texto a voz (TTS)
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" wire:model="form.accesibilidad.high_contrast">
+                            Alto contraste
+                        </label>
                     </div>
-                </button>
-            </div>
-        </form>
+                </div>
+                @endif
+
+                {{-- Botones --}}
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" wire:click="$set('isOpen', false)"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                        <span>Guardar</span>
+                        <div wire:loading wire:target="guardar">
+                            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-@endif
+    @endif
 
 
 
     {{-- Modal Detalles --}}
-   @if($verModal && $usuarioVer)
-<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
-    <div class="bg-white dark:bg-gray-800 dark:text-gray-200 w-full max-w-4xl p-6 rounded-2xl shadow-xl overflow-y-auto max-h-[90vh]">
-        
-        <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-            Detalles del Usuario: {{ $usuarioVer->name }}
-        </h2>
+    @if($verModal && $usuarioVer)
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+        <div
+            class="bg-white dark:bg-gray-800 dark:text-gray-200 w-full max-w-4xl p-6 rounded-2xl shadow-xl overflow-y-auto max-h-[90vh]">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {{-- Datos generales --}}
-            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-                <h3 class="font-semibold mb-2">Información General</h3>
-                <p><strong>Nombre:</strong> {{ $usuarioVer->name }}</p>
-                <p><strong>Usuario:</strong> {{ $usuarioVer->username }}</p>
-                <p><strong>Email:</strong> {{ $usuarioVer->email }}</p>
-                <p><strong>Creado el:</strong> {{ $usuarioVer->created_at->format('d/m/Y H:i') }}</p>
-                @if($usuarioVer->profile_photo_path)
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+                Detalles del Usuario: {{ $usuarioVer->name }}
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- Datos generales --}}
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                    <h3 class="font-semibold mb-2">Información General</h3>
+                    <p><strong>Nombre:</strong> {{ $usuarioVer->name }}</p>
+                    <p><strong>Usuario:</strong> {{ $usuarioVer->username }}</p>
+                    <p><strong>Email:</strong> {{ $usuarioVer->email }}</p>
+                    <p><strong>Creado el:</strong> {{ $usuarioVer->created_at->format('d/m/Y H:i') }}</p>
+                    @if($usuarioVer->profile_photo_path)
                     <div class="mt-2">
-                        <img src="{{ $usuarioVer->profile_photo_path }}" alt="Foto de perfil" class="h-24 w-24 rounded-full object-cover border">
+                        <img src="{{ $usuarioVer->profile_photo_path }}" alt="Foto de perfil"
+                            class="h-24 w-24 rounded-full object-cover border">
                     </div>
-                @endif
-            </div>
+                    @endif
+                </div>
 
-            {{-- Roles --}}
-            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
-                <h3 class="font-semibold mb-2">Roles</h3>
-                @foreach($usuarioVer->roles as $rol)
-                    <span class="px-2 py-1 bg-indigo-200 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200 rounded text-xs mr-1">{{ $rol->name }}</span>
-                @endforeach
-            </div>
+                {{-- Roles --}}
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
+                    <h3 class="font-semibold mb-2">Roles</h3>
+                    @foreach($usuarioVer->roles as $rol)
+                    <span
+                        class="px-2 py-1 bg-indigo-200 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-200 rounded text-xs mr-1">{{
+                        $rol->name }}</span>
+                    @endforeach
+                </div>
 
-            {{-- Información por rol --}}
-            @if($usuarioVer->hasRole('Cobrador'))
+                {{-- Información por rol --}}
+                @if($usuarioVer->hasRole('Cobrador'))
                 <div class="bg-green-100 dark:bg-green-700 p-4 rounded-lg shadow-sm col-span-1 md:col-span-2">
                     <h3 class="font-semibold mb-2">Cobrador</h3>
                     <p><strong>Cartera asignada:</strong> {{ $usuarioVer->cartera?->nombre ?? 'No asignada' }}</p>
                 </div>
-            @endif
+                @endif
 
-            @if($usuarioVer->hasRole('Docente'))
+                @if($usuarioVer->hasRole('Docente'))
                 <div class="bg-yellow-100 dark:bg-yellow-700 p-4 rounded-lg shadow-sm col-span-1 md:col-span-2">
                     <h3 class="font-semibold mb-2">Docente</h3>
-                    
+
                     <p><strong>Grados:</strong>
                         @foreach($usuarioVer->grados as $grado)
-                            <span class="px-2 py-1 bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200 rounded text-xs mr-1">{{ $grado->nombre }}</span>
+                        <span
+                            class="px-2 py-1 bg-yellow-200 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200 rounded text-xs mr-1">{{
+                            $grado->nombre }}</span>
                         @endforeach
                     </p>
                 </div>
-            @endif
+                @endif
 
-         @if($usuarioVer->hasRole('Estudiante'))
-<div class="bg-purple-100 dark:bg-purple-700 p-4 rounded-lg shadow-sm col-span-1 md:col-span-2">
-    <h3 class="font-semibold mb-2">Estudiante</h3>
+                @if($usuarioVer->hasRole('Estudiante'))
+                <div class="bg-purple-100 dark:bg-purple-700 p-4 rounded-lg shadow-sm col-span-1 md:col-span-2">
+                    <h3 class="font-semibold mb-2">Estudiante</h3>
 
-    @php
-        $matricula = $usuarioVer->matriculas()->latest()->first();
-        $grado = $matricula?->grado ? \App\Models\Grado::find($matricula->grado) : null;
-    @endphp
+                    @php
+                    $matricula = $usuarioVer->matriculas()->latest()->first();
+                    $grado = $matricula?->grado ? \App\Models\Grado::find($matricula->grado) : null;
+                    @endphp
 
-    
-    <p><strong>Grado:</strong> {{ $grado?->nombre ?? '--' }}</p>
-    <p><strong>Sección:</strong> {{ $matricula?->seccion ?? '--' }}</p>
-    <p><strong>Docente:</strong> {{ $matricula?->docente?->name ?? '--' }}</p>
-    <p><strong>Preferencias de Accesibilidad:</strong>
-        @if($usuarioVer->preferencias_accesibilidad)
-            @php $prefs = json_decode($usuarioVer->preferencias_accesibilidad,true); @endphp
-            @if(!empty($prefs['tts'])) Texto a voz (TTS) @endif
-            @if(!empty($prefs['high_contrast'])) | Alto contraste @endif
-        @else
-            Ninguna
-        @endif
-    </p>
-</div>
-@endif
 
-        </div>
+                    <p><strong>Grado:</strong> {{ $grado?->nombre ?? '--' }}</p>
+                    <p><strong>Sección:</strong> {{ $matricula?->seccion ?? '--' }}</p>
+                    <p><strong>Docente:</strong> {{ $matricula?->docente?->name ?? '--' }}</p>
+                    <p><strong>Preferencias de Accesibilidad:</strong>
+                        @if($usuarioVer->preferencias_accesibilidad)
+                        @php $prefs = json_decode($usuarioVer->preferencias_accesibilidad,true); @endphp
+                        @if(!empty($prefs['tts'])) Texto a voz (TTS) @endif
+                        @if(!empty($prefs['high_contrast'])) | Alto contraste @endif
+                        @else
+                        Ninguna
+                        @endif
+                    </p>
+                </div>
+                @endif
 
-        <div class="flex justify-end mt-6">
-            <button type="button" wire:click="cerrarModalVer" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition">
-                Cerrar
-            </button>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" wire:click="cerrarModalVer"
+                    class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition">
+                    Cerrar
+                </button>
+            </div>
         </div>
     </div>
-</div>
-@endif
+    @endif
 
 
 
@@ -447,14 +521,17 @@
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div class="bg-white dark:bg-gray-800 dark:text-gray-200 rounded-xl shadow-lg w-96 p-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Confirmar eliminación</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede
+            <p class="text-gray-600 dark:text-gray-300 mb-6">¿Estás seguro de que deseas eliminar este usuario? Esta
+                acción no se puede
                 deshacer.</p>
 
             <div class="flex justify-end space-x-3">
-                <button wire:click="$set('modalConfirmar', false)" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg text-gray-800">
+                <button wire:click="$set('modalConfirmar', false)"
+                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg text-gray-800">
                     Cancelar
                 </button>
-                <button wire:click="eliminarConfirmado" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white">
+                <button wire:click="eliminarConfirmado"
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white">
                     Sí, eliminar
                 </button>
             </div>

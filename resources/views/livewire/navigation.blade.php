@@ -5,7 +5,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <livewire:navigation-logo size="h-9 w-auto" />
+                        <livewire:navigation-logo size="max-w-full h-auto" />
                     </div>
 
                     <!-- Links escritorio -->
@@ -15,19 +15,18 @@
                             <i class="fas fa-home mr-1"></i> {{ __('Hogar') }}
                         </x-nav-link>
 
-                       
+
 
                         <x-nav-link class="dark:text-gray-300" :href="route('juegos.index')"
                             :active="request()->routeIs('juegos')">
                             <i class="fas fa-gamepad mr-1"></i> {{ __('Juegos') }}
                         </x-nav-link>
 
-                        <x-nav-link class="dark:text-gray-300" :href="route('ia')"
-                            :active="request()->routeIs('ia')">
+                        <x-nav-link class="dark:text-gray-300" :href="route('ia')" :active="request()->routeIs('ia')">
                             <i class="fas fa-robot mr-1"></i> {{ __('Inteligencia Artificial') }}
                         </x-nav-link>
 
-                         <x-nav-link class="dark:text-gray-300" :href="route('mision')"
+                        <x-nav-link class="dark:text-gray-300" :href="route('mision')"
                             :active="request()->routeIs('mision')">
                             <i class="fas fa-bullseye mr-1"></i> {{ __('Misión') }}
                         </x-nav-link>
@@ -74,17 +73,22 @@
 
                 <!-- Perfil escritorio -->
                 <div class="hidden md:flex md:items-center md:space-x-4">
+                    @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
                                 class="inline-flex items-center px-3 py-2 border border-transparent rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all focus:outline-none">
+
                                 @if(Auth::user()->profile_photo_path)
                                 <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
                                     class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
                                 @else
-                                <i
-                                    class="fas fa-user h-10 w-10 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm text-lg"></i>
+                                <div
+                                    class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                                    <i class="fas fa-user text-gray-500 text-lg"></i>
+                                </div>
                                 @endif
+
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4 text-gray-600 dark:text-gray-300"
                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -95,16 +99,19 @@
                                 </div>
                             </button>
                         </x-slot>
+
                         <x-slot name="content">
                             <div class="block px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {{ Auth::user()->name }}
                             </div>
+
                             <div
                                 class="block w-full px-4 py-2 text-start text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                                 <button id="dark-mode-toggle" class="w-full text-left">
                                     🌙 {{ __('Modo Oscuro') }}
                                 </button>
                             </div>
+
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')"
@@ -114,7 +121,17 @@
                             </form>
                         </x-slot>
                     </x-dropdown>
+                    @endauth
+
+                    @guest
+                    <a href="{{ route('login') }}"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition flex items-center gap-2">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                    </a>
+                    @endguest
                 </div>
+
+
 
                 <!-- Botón menú móvil -->
                 <div class="flex items-center md:hidden">
@@ -149,7 +166,7 @@
                     <i class="fa-solid fa-house mr-1"></i> {{ __('Hogar') }}
                 </x-responsive-nav-link>
 
-               
+
 
                 <x-responsive-nav-link :href="route('juegos.index')" :active="request()->routeIs('juegos')">
                     <i class="fa-solid fa-gamepad mr-1"></i> {{ __('Juegos') }}
@@ -159,7 +176,7 @@
                     <i class="fas fa-robot mr-1"></i> {{ __('Inteligencia Artificial') }}
                 </x-responsive-nav-link>
 
-                 <x-responsive-nav-link :href="route('mision')" :active="request()->routeIs('mision')">
+                <x-responsive-nav-link :href="route('mision')" :active="request()->routeIs('mision')">
                     <i class="fa-solid fa-bullseye mr-1"></i> {{ __('Misión') }}
                 </x-responsive-nav-link>
 
@@ -186,18 +203,22 @@
                 @endrole
             </div>
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-700">
+                @auth
                 <div class="px-4 flex items-center space-x-3">
                     @if(Auth::user()->profile_photo_path)
                     <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
                         class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
                     @else
-                    <i
-                        class="fas fa-user h-10 w-10 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm text-lg"></i>
+                    <div
+                        class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                        <i class="fas fa-user text-gray-500 text-lg"></i>
+                    </div>
                     @endif
                     <div class="font-medium text-base text-gray-800 dark:text-gray-100">
                         {{ Auth::user()->name }}
                     </div>
                 </div>
+
                 <div class="mt-3 space-y-1">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -206,15 +227,30 @@
                             {{ __('Cerrar sesión') }}
                         </x-responsive-nav-link>
                     </form>
+
                     <div class="px-4 pt-2">
-                        <!--
-                       <button id="dark-mode-toggle-mobile" class="text-xl px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition w-full text-left">
-                        🌙
-                    </button>
-                    -->
+                        <!-- Botón modo oscuro en móvil -->
+                        <button id="dark-mode-toggle-mobile"
+                            class="text-sm px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition w-full text-left">
+                            🌙 {{ __('Modo Oscuro') }}
+                        </button>
                     </div>
                 </div>
+                @endauth
+
+                @guest
+                <div class="px-4 py-2 space-y-2">
+                    <a href="{{ route('login') }}"
+                        class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+                    </a>
+
+                   
+                </div>
+                @endguest
             </div>
+
+
         </div>
     </nav>
 
