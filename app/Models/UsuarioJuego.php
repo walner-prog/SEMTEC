@@ -12,6 +12,23 @@ class UsuarioJuego extends Model
     protected $table = 'usuario_juego';
 
     protected $fillable = [
-        'user_id', 'juego_id', 'puntaje', 'intentos', 'completado', 'ultima_partida'
+        'user_id', 'juego_id', 'puntaje', 'intentos', 'completado',
+        'racha_actual', 'racha_maxima', 'dias_jugados', 'ultima_partida'
     ];
+
+    public function juego()
+    {
+        return $this->belongsTo(Juego::class, 'juego_id');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function logros()
+    {
+        return $this->usuario->logros()->wherePivot('juego_id', $this->juego_id);
+    }
 }
+

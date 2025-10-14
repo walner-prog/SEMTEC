@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('requisito_monedas')->nullable();
             $table->integer('requisito_trofeos')->nullable();
             $table->tinyInteger('nivel')->default(1)->comment('Nivel del juego, 1=Primer grado, 2=Segundo grado, ... 6=Sexto grado');
-
+             $table->string('categoria')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

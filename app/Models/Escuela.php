@@ -25,4 +25,10 @@ class Escuela extends Model
     return $this->belongsTo(Escuela::class);
 }
 
+public function grados()
+{
+    return $this->hasMany(Grado::class);
+}
+
+
 }

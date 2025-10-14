@@ -10,17 +10,17 @@ class SeederQuintoNivel extends Seeder
 {
     public function run(): void
     {
-        $juegos = [
-            "Suma y Resta Avanzada",
-            "Multiplicaciones y Divisiones",
-            "Fracciones y Decimales",
-            "Problemas Matemáticos Complejos",
-            "Geometría y Figuras",
-            "Medidas y Unidades Avanzadas",
-            "Razonamiento Lógico",
-            "Velocidad Mental",
-            "Matemagia",
-            "Quiz de Matemáticas"
+       $juegos = [
+            ["Suma y Resta Avanzada", "Matemáticas"],
+            ["Multiplicaciones y Divisiones", "Matemáticas"],
+            ["Fracciones y Decimales", "Fracciones/Decimales"],
+            ["Problemas Matemáticos Complejos", "Razonamiento/Problemas"],
+            ["Geometría y Figuras", "Geometría"],
+            ["Medidas y Unidades Avanzadas", "Medidas/Unidades"],
+            ["Razonamiento Lógico", "Razonamiento/Problemas"],
+            ["Velocidad Mental", "Matemáticas/Velocidad Mental"],
+            ["Matemagia", "Razonamiento/Matemagia"],
+            ["Quiz de Matemáticas", "Repaso General"]
         ];
 
         $preguntasPorJuego = [
@@ -146,23 +146,25 @@ class SeederQuintoNivel extends Seeder
             ],
         ];
 
-        foreach ($juegos as $nombre) {
-            $juego = Juego::create([
-                'nombre' => $nombre,
-                'nivel' => 5,
-                'puntos_base' => 10,
-                'tipo' => 'quiz',
-                'bloqueado' => false,
-            ]);
+      foreach ($juegos as $j) {
+    $juego = Juego::create([
+        'nombre' => $j[0],
+        'nivel' => 5,
+        'puntos_base' => 10,
+        'tipo' => 'quiz',
+        'bloqueado' => false,
+        'categoria' => $j[1],
+    ]);
 
-            foreach ($preguntasPorJuego[$nombre] as $p) {
-                Pregunta::create([
-                    'juego_id' => $juego->id,
-                    'enunciado' => $p[0],
-                    'opciones' => json_encode($p[1]),
-                    'respuesta_correcta' => $p[2],
-                ]);
-            }
-        }
+    foreach ($preguntasPorJuego[$j[0]] as $p) {
+        Pregunta::create([
+            'juego_id' => $juego->id,
+            'enunciado' => $p[0],
+            'opciones' => json_encode($p[1]),
+            'respuesta_correcta' => $p[2],
+        ]);
+    }
+}
+
     }
 }

@@ -38,6 +38,7 @@ class User extends Authenticatable
         'profile_photo_path',
         'deleted_at',
         'delete_profile_photo_path',
+        'xp',
 
     ];
 
@@ -100,9 +101,10 @@ public function juegos()
 public function logros()
 {
     return $this->belongsToMany(Logro::class, 'usuario_logro')
-        ->withPivot('fecha_obtenido')
+        ->withPivot('fecha_obtenido', 'juego_id') // <-- aquí debe incluir juego_id
         ->withTimestamps();
 }
+
 
  
 public function estadisticas()

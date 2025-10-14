@@ -17,12 +17,14 @@ return new class extends Migration
     $table->string('name');
     $table->string('username')->unique(); // ← Nuevo campo para login
     $table->string('email')->unique()->nullable(); // email ahora es nullable
+    $table->string('telefono')->nullable();
     $table->json('preferencias_accesibilidad')->nullable();
     $table->foreignId('escuela_id')->nullable()->constrained('escuelas')->cascadeOnDelete();
      $table->foreignId('tutor_id')->nullable()->constrained('users');
     $table->timestamp('email_verified_at')->nullable();
     $table->string('password');
-    
+    $table->unsignedInteger('xp')->default(0);
+            
     $table->rememberToken();
     $table->foreignId('current_team_id')->nullable();
     $table->string('profile_photo_path', 2048)->nullable();

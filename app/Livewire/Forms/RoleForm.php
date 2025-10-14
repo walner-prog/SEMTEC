@@ -6,13 +6,13 @@ use Livewire\Form;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+ 
 
 class RoleForm extends Form
 {
     public $name = '';
-    public $permissions = []; // lista de permisos seleccionados
-    public $allPermissions = []; // todos los permisos para el select
+    public $permissions = []; 
+    public $allPermissions = [];  
     public ?Role $role = null;
 
     public function mount()
@@ -28,7 +28,7 @@ class RoleForm extends Form
             'permissions.*' => ['exists:permissions,id'],
         ];
 
-        // Solo validar nombre si no es Administrador
+     
         if (! $this->role || $this->role->name !== 'Administrador') {
             $rules['name'] = [
                 'required',
@@ -76,10 +76,9 @@ public function store()
 public function update()
 {
     if (!$this->role) return;
-
-    // Evitar modificar el rol Administrador
+ 
     if ($this->role->name === 'Administrador') {
-        // Solo actualizar permisos
+        
         $perms = Permission::whereIn('id', $this->permissions ?? [])->pluck('name')->toArray();
         $this->role->syncPermissions($perms);
         return;

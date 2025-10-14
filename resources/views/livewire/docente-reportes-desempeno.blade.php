@@ -93,64 +93,73 @@
     @endif
 
     <!-- Reporte -->
-    @if(!empty($reporteData))
-        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-6">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold mb-4">Reporte de Desempeño: {{ $reporteData['estudiante']->name }}</h3>
+ @if(!empty($reporteData))
+<div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-6">
+    <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            Reporte de Desempeño: {{ $reporteData['estudiante']->name }}
+        </h3>
 
-                <!-- Estadísticas -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    @php
-                        $estadisticas = [
-                            ['valor'=>$reporteData['estadisticas']['total_actividades'],'label'=>'Total Actividades','color'=>'blue'],
-                            ['valor'=>$reporteData['estadisticas']['actividades_completadas'],'label'=>'Completadas','color'=>'green'],
-                            ['valor'=>$reporteData['estadisticas']['promedio_puntaje'],'label'=>'Puntaje Promedio','color'=>'yellow'],
-                            ['valor'=>$reporteData['estadisticas']['actividades_revisadas'],'label'=>'Revisadas','color'=>'purple'],
-                        ];
-                    @endphp
-                    @foreach($estadisticas as $est)
-                        <div class="p-4 rounded-lg text-center relative group bg-{{ $est['color'] }}-50 dark:bg-{{ $est['color'] }}-800/40">
-                            <div class="text-2xl font-bold text-{{ $est['color'] }}-600 dark:text-{{ $est['color'] }}-200">{{ $est['valor'] }}</div>
-                            <div class="text-sm font-medium text-{{ $est['color'] }}-800 dark:text-{{ $est['color'] }}-100">{{ $est['label'] }}</div>
-                        </div>
-                    @endforeach
-                </div>
+        <!-- Estadísticas -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            @php
+                $estadisticas = [
+                    ['valor'=>$reporteData['estadisticas']['total_actividades'],'label'=>'Total Actividades','color'=>'blue'],
+                    ['valor'=>$reporteData['estadisticas']['actividades_completadas'],'label'=>'Completadas','color'=>'green'],
+                    ['valor'=>$reporteData['estadisticas']['promedio_puntaje'],'label'=>'Puntaje Promedio','color'=>'yellow'],
+                    ['valor'=>$reporteData['estadisticas']['actividades_revisadas'],'label'=>'Revisadas','color'=>'purple'],
+                ];
+            @endphp
+           @foreach($estadisticas as $est)
+<div class="p-4 rounded-lg text-center relative group 
+    bg-{{ $est['color'] }}-50 dark:bg-gray-700/30">
+    <div class="text-2xl font-bold text-{{ $est['color'] }}-600 dark:text-white">
+        {{ $est['valor'] }}
+    </div>
+    <div class="text-sm font-medium text-{{ $est['color'] }}-800 dark:text-gray-200">
+        {{ $est['label'] }}
+    </div>
+</div>
+@endforeach
 
-                <!-- Detalles de actividades -->
-                <h4 class="text-md font-semibold mb-3">Detalle de Actividades</h4>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Actividad</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Fecha</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Aciertos</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Puntaje</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($reporteData['intentos'] as $intento)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                                    <td class="px-4 py-2">{{ $intento->actividad->titulo }}</td>
-                                    <td class="px-4 py-2">{{ $intento->created_at->format('d/m/Y') }}</td>
-                                    <td class="px-4 py-2">{{ $intento->aciertos }}</td>
-                                    <td class="px-4 py-2">{{ $intento->puntaje }}</td>
-                                    <td class="px-4 py-2">
-                                        @if($intento->revision && $intento->revision->revisado)
-                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full dark:bg-green-700 dark:text-green-100">Revisado</span>
-                                        @else
-                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full dark:bg-yellow-700 dark:text-yellow-100">Pendiente</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
-    @endif
+
+        <!-- Detalles de actividades -->
+        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-3">Detalle de Actividades</h4>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Actividad</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Fecha</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Aciertos</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Puntaje</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    @foreach($reporteData['intentos'] as $intento)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                        <td class="px-4 py-2 text-gray-800 dark:text-gray-200">{{ $intento->actividad->titulo }}</td>
+                        <td class="px-4 py-2 text-gray-800 dark:text-gray-200">{{ $intento->created_at->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2 text-gray-800 dark:text-gray-200">{{ $intento->aciertos }}</td>
+                        <td class="px-4 py-2 text-gray-800 dark:text-gray-200">{{ $intento->puntaje }}</td>
+                        <td class="px-4 py-2">
+                            @if($intento->revision && $intento->revision->revisado)
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full dark:bg-green-700 dark:text-green-100">Revisado</span>
+                            @else
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full dark:bg-yellow-700 dark:text-yellow-100">Pendiente</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endif
+
 
     <!-- Modal Explicativo -->
     <div x-show="mostrarModal" 

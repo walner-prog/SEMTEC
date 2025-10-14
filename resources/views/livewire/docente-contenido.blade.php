@@ -25,7 +25,7 @@
     @if ($isOpen)
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
         <div
-            class="bg-white dark:bg-gray-800 w-full max-w-3xl p-6 rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] relative">
+            class="bg-white dark:bg-gray-800 w-full max-w-6xl p-6 rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh] relative pb-28">
 
             {{-- Botón cerrar --}}
             <button type="button" wire:click="$set('isOpen', false)"
@@ -33,14 +33,17 @@
                 <i class="fas fa-times text-xl"></i>
             </button>
 
-            {{-- Error --}}
-            @if (session()->has('error'))
-            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-                class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mb-4 rounded-lg shadow-md flex items-center gap-2">
-                <i class="fas fa-exclamation-circle"></i>
-                {{ session('error') }}
+            @if($errors->any())
+            <div class="bg-red-100 text-red-800 p-2 rounded mb-4">
+                <ul class="list-disc pl-5">
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
             @endif
+
+
 
             {{-- Título --}}
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">
@@ -49,29 +52,33 @@
                 {{ $modo === 'crear' ? 'Crear Contenido' : 'Editar Contenido' }}
             </h2>
 
+           
             {{-- Wizard pasos --}}
-            <div class="mb-6 flex justify-between">
-                <span
-                    class="flex items-center gap-2 px-4 py-2 rounded-full 
-                {{ $step==1 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
-                    <i class="fas fa-book"></i> Unidad
-                </span>
-                <span
-                    class="flex items-center gap-2 px-4 py-2 rounded-full 
-                {{ $step==2 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
-                    <i class="fas fa-lightbulb"></i> Competencias
-                </span>
-                <span
-                    class="flex items-center gap-2 px-4 py-2 rounded-full 
-                {{ $step==3 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
-                    <i class="fas fa-check-circle"></i> Indicadores
-                </span>
-                <span
-                    class="flex items-center gap-2 px-4 py-2 rounded-full 
-                {{ $step==4 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
-                    <i class="fas fa-tasks"></i> Actividades
-                </span>
+            <div class="mb-6 overflow-x-auto">
+                <div class="flex gap-2 flex-nowrap min-w-max">
+                    <span
+                        class="flex items-center gap-2 px-4 py-2 rounded-full
+            {{ $step==1 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
+                        <i class="fas fa-book"></i> Unidad
+                    </span>
+                    <span
+                        class="flex items-center gap-2 px-4 py-2 rounded-full
+            {{ $step==2 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
+                        <i class="fas fa-lightbulb"></i> Competencias
+                    </span>
+                    <span
+                        class="flex items-center gap-2 px-4 py-2 rounded-full
+            {{ $step==3 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
+                        <i class="fas fa-check-circle"></i> Indicadores
+                    </span>
+                    <span
+                        class="flex items-center gap-2 px-4 py-2 rounded-full
+            {{ $step==4 ? 'bg-green-600 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' }}">
+                        <i class="fas fa-tasks"></i> Actividades
+                    </span>
+                </div>
             </div>
+
 
             <form class="space-y-4">
 
@@ -319,97 +326,74 @@
 
 
     {{-- Tabla de Unidades --}}
-   <div class="max-w-7xl mx-auto p-6 lg:p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 
+    <div class="max-w-8xl mx-auto p-2 lg:p-8 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen rounded-2xl">
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {{-- 🔹 Sección principal (Gestión de Unidades) --}}
-        <div class="lg:col-span-9 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition">
-            <!-- Header -->
-            <div
-                class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                    <i class="fas fa-layer-group text-blue-500"></i> Gestión de Unidades
-                </h2>
-                <div class="flex flex-wrap gap-3 items-center">
-                    <!-- Buscador -->
-                    <input type="text" wire:model.live="search" placeholder="Buscar por título..."
-                        class="w-48 sm:w-64 border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {{-- 🔹 Sección principal (Gestión de Unidades) --}}
 
-                    <!-- Filtro por grado -->
-                    <select wire:model.live="grado_id"
-                        class="border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
-                        <option value="">Todos los grados</option>
-                        @foreach($grados as $grado)
-                            <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
-                        @endforeach
-                    </select>
 
-                    <!-- Per Page -->
-                    <select wire:model.live="perPage"
-                        class="border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
-                        <option value="5">5 por página</option>
-                        <option value="10">10 por página</option>
-                        <option value="25">25 por página</option>
-                    </select>
+            <div class="lg:col-span-9 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition">
+                <div class="block lg:hidden p-4 space-y-3">
+                    <!-- Filtros desplegables -->
+                    <div x-data="{ open: false }" class="mb-3">
+                        <button @click="open = !open"
+                            class="w-full flex justify-between items-center px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg shadow">
+                            <span class="font-semibold">🎯 Filtros</span>
+                            <i :class="open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="open" x-transition
+                            class="mt-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow space-y-3 border dark:border-gray-700">
 
-                    <!-- Nuevo -->
-                    <button wire:click="abrirModal"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Nuevo Contenido
-                    </button>
-                </div>
-            </div>
+                            <!-- Buscador -->
+                            <input type="text" wire:model.live="search" placeholder="🔍 Buscar por título..."
+                                class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
 
-            <!-- Tabla -->
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr
-                            class="bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-sm font-semibold uppercase tracking-wider">
-                            <th class="p-4 text-left">#</th>
-                            <th class="p-4 text-left">Título</th>
-                            <th class="p-4 text-left">Grado</th>
-                            <th class="p-4 text-left">Orden</th>
-                            <th class="p-4 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($unidades as $index => $unidad)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
-                                <td class="p-4">
-                                    <span
-                                        class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-700 
-                                               text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">
-                                        {{ $unidad->id }}
-                                    </span>
-                                </td>
-                                <td class="p-4">
-                                    <div class="font-medium text-gray-900 dark:text-white">{{ $unidad->titulo }}</div>
-                                    @if($unidad->descripcion)
-                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                            {{ Str::limit($unidad->descripcion, 50) }}
-                                        </div>
-                                    @endif
-                                </td>
-                                <td class="p-4">
-                                    @if($unidad->grado)
-                                        <span
-                                            class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium">
-                                            {{ $unidad->grado->nombre }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400 dark:text-gray-500">-</span>
-                                    @endif
-                                </td>
-                                <td class="p-4">
-                                    <span
-                                        class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-700 
-                                               text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium">
-                                        {{ $unidad->orden }}
-                                    </span>
-                                </td>
-                                <td class="p-4 flex gap-2">
+                            <!-- Filtro por grado -->
+                            <select wire:model.live="grado_id"
+                                class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
+                                <option value="">Todos los grados</option>
+                                @foreach($grados as $grado)
+                                <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
+                                @endforeach
+                            </select>
+
+                            <!-- Per Page -->
+                            <select wire:model.live="perPage"
+                                class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
+                                <option value="5">5 por página</option>
+                                <option value="10">10 por página</option>
+                                <option value="25">25 por página</option>
+                            </select>
+
+                            <!-- Nuevo -->
+                            <button wire:click="abrirModal"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm flex items-center gap-2 w-full">
+                                <i class="fas fa-plus"></i> Nuevo Contenido
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cards compactas -->
+                    <div class="grid gap-3">
+                        @forelse($unidades as $unidad)
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border dark:border-gray-700 p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-900 dark:text-white text-sm">{{ $unidad->titulo }}
+                                </h3>
+                                <span
+                                    class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">
+                                    {{ $unidad->grado->nombre ?? '-' }}
+                                </span>
+                            </div>
+                            @if($unidad->descripcion)
+                            <p class="text-gray-500 dark:text-gray-300 text-xs mb-2">{{ Str::limit($unidad->descripcion,
+                                80) }}</p>
+                            @endif
+                            <div
+                                class="flex justify-between items-center text-xs text-gray-600 dark:text-gray-300 mt-2">
+                                <span>Orden: {{ $unidad->orden }}</span>
+                                <div class="flex gap-2">
                                     <button wire:click="abrirModalVer({{ $unidad->id }})"
                                         class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full"
                                         title="Ver detalles">
@@ -421,72 +405,172 @@
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button wire:click="abrirModalEliminar({{ $unidad->id }})"
-                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full" title="Eliminar">
+                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                                        title="Eliminar">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="text-center text-gray-500 dark:text-gray-400 py-6">
+                            <i class="fas fa-inbox text-4xl mb-2"></i>
+                            <p class="text-sm font-medium">No hay unidades registradas</p>
+                        </div>
+                        @endforelse
+                    </div>
+
+                    <!-- Paginación -->
+                    <div class="mt-4">
+                        {{ $unidades->links() }}
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div
+                class="hidden lg:block lg:col-span-9 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition">
+                <!-- Header -->
+                <div
+                    class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                        <i class="fas fa-layer-group text-blue-500"></i> Gestión de Unidades
+                    </h2>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <input type="text" wire:model.live="search" placeholder="Buscar por título..."
+                            class="w-48 sm:w-64 border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
+                        <select wire:model.live="grado_id"
+                            class="border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
+                            <option value="">Todos los grados</option>
+                            @foreach($grados as $grado)
+                            <option value="{{ $grado->id }}">{{ $grado->nombre }}</option>
+                            @endforeach
+                        </select>
+                        <select wire:model.live="perPage"
+                            class="border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
+                            <option value="5">5 por página</option>
+                            <option value="10">10 por página</option>
+                            <option value="25">25 por página</option>
+                        </select>
+                        <button wire:click="abrirModal"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm flex items-center gap-2">
+                            <i class="fas fa-plus"></i> Nuevo Contenido
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr
+                                class="bg-gray-50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-sm font-semibold uppercase tracking-wider">
+                                <th class="p-4 text-left">#</th>
+                                <th class="p-4 text-left">Título</th>
+                                <th class="p-4 text-left">Grado</th>
+                                <th class="p-4 text-left">Orden</th>
+                                <th class="p-4 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($unidades as $index => $unidad)
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+                                <td class="p-4">{{ $unidad->id }}</td>
+                                <td class="p-4">
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ $unidad->titulo }}</div>
+                                    @if($unidad->descripcion)
+                                    <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{
+                                        Str::limit($unidad->descripcion, 50) }}</div>
+                                    @endif
+                                </td>
+                                <td class="p-4">{{ $unidad->grado->nombre ?? '-' }}</td>
+                                <td class="p-4">{{ $unidad->orden }}</td>
+                                <td class="p-4 flex gap-2">
+                                    <button wire:click="abrirModalVer({{ $unidad->id }})"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button wire:click="abrirModalEditar({{ $unidad->id }})"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button wire:click="abrirModalEliminar({{ $unidad->id }})"
+                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
                             </tr>
-                        @empty
+                            @empty
                             <tr>
                                 <td colspan="5" class="p-8 text-center text-gray-400 dark:text-gray-500">
                                     <i class="fas fa-inbox text-4xl mb-3"></i>
                                     <p class="text-lg font-medium">No hay unidades registradas</p>
                                 </td>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Paginación y contador -->
-            <div
-                class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                <div class="text-gray-600 dark:text-gray-300 text-sm">
-                    Mostrando <span class="font-medium">{{ $unidades->firstItem() }}</span> a
-                    <span class="font-medium">{{ $unidades->lastItem() }}</span>
-                    de <span class="font-medium">{{ $unidades->total() }}</span> unidades
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                <div class="mt-2 sm:mt-0">
-                    {{ $unidades->links() }}
-                </div>
-            </div>
-        </div>
 
-        {{-- 🔹 Columna lateral Docente --}}
-        <div class="lg:col-span-3 flex flex-col gap-6">
-            <!-- Perfil docente -->
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
-                <div class="flex items-center gap-4">
-                    <div
-                        class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                <!-- Paginación y contador -->
+                <div
+                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="text-gray-600 dark:text-gray-300 text-sm">
+                        Mostrando <span class="font-medium">{{ $unidades->firstItem() }}</span> a
+                        <span class="font-medium">{{ $unidades->lastItem() }}</span>
+                        de <span class="font-medium">{{ $unidades->total() }}</span> unidades
                     </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800 dark:text-white">{{ auth()->user()->name }}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-300">Docente</p>
+                    <div class="mt-2 sm:mt-0">
+                        {{ $unidades->links() }}
                     </div>
                 </div>
-                <div class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                    <p><i class="fas fa-graduation-cap text-blue-500 mr-2"></i> {{ count($grados) }} grados asignados</p>
-                    <p><i class="fas fa-book text-green-500 mr-2"></i> {{ $unidades->total() }} unidades creadas</p>
-                    <p><i class="fas fa-star text-yellow-500 mr-2"></i> Nivel Experto</p>
-                </div>
             </div>
 
-            <!-- Tips para docentes -->
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                    <i class="fas fa-lightbulb text-yellow-400"></i> Tips para docentes
-                </h3>
-                <ul class="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Revisa el progreso de tus alumnos semanalmente</li>
-                    <li><i class="fas fa-clock text-blue-500 mr-2"></i> Programa actividades con fechas claras</li>
-                    <li><i class="fas fa-chart-line text-purple-500 mr-2"></i> Usa reportes para mejorar tu planificación</li>
-                </ul>
+
+            {{-- 🔹 Columna lateral Docente --}}
+            <div class="lg:col-span-3 flex flex-col gap-6">
+                <!-- Perfil docente -->
+                <div
+                    class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-white">{{ auth()->user()->name }}</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Docente</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <p><i class="fas fa-graduation-cap text-blue-500 mr-2"></i> Grado asignado: {{ count($grados)
+                            }}º </p>
+                        <p><i class="fas fa-book text-green-500 mr-2"></i> {{ $unidades->total() }} unidades creadas</p>
+                        <p><i class="fas fa-star text-yellow-500 mr-2"></i> Nivel Experto</p>
+                    </div>
+                </div>
+
+                <!-- Tips para docentes -->
+                <div
+                    class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                        <i class="fas fa-lightbulb text-yellow-400"></i> Tips para docentes
+                    </h3>
+                    <ul class="mt-3 space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Revisa el progreso de tus alumnos
+                            semanalmente</li>
+                        <li><i class="fas fa-clock text-blue-500 mr-2"></i> Programa actividades con fechas claras</li>
+                        <li><i class="fas fa-chart-line text-purple-500 mr-2"></i> Usa reportes para mejorar tu
+                            planificación</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 

@@ -22,7 +22,7 @@ class DocenteContenido extends Component
     public $isOpen = false;
     public $modo = 'crear';
     public $grados = [];
-   // public $unidades = [];
+    // public $unidades = [];
     public ?Unidad $unidadSeleccionada = null;
     // Para manejar la confirmación de eliminación
     public $isDeleteModalOpen = false;
@@ -33,7 +33,7 @@ class DocenteContenido extends Component
     public $grado_id = '';
     public $perPage = 5;
 
-  
+
 
 
 
@@ -75,7 +75,7 @@ class DocenteContenido extends Component
     {
         $this->grados = Grado::orderBy('orden')->get(['id', 'nombre']);
 
-    //  $this->cargarUnidades();
+        //  $this->cargarUnidades();
     }
 
     public function updatingSearch()
@@ -125,7 +125,7 @@ class DocenteContenido extends Component
             $contenidoForm->guardar($this->form);
             $this->isOpen = false;
             session()->flash('create', 'Contenido creado con éxito 🎉');
-           // $this->cargarUnidades();
+            // $this->cargarUnidades();
         } catch (ValidationException $e) {
             $this->setErrorBag($e->errors());
         } catch (\Exception $e) {
@@ -141,7 +141,7 @@ class DocenteContenido extends Component
             $contenidoForm->actualizar($this->unidadSeleccionada, $this->form);
             $this->isOpen = false;
             session()->flash('update', 'Unidad actualizada con éxito 🎉');
-         //   $this->cargarUnidades();
+            //   $this->cargarUnidades();
         } catch (ValidationException $e) {
             $this->setErrorBag($e->errors());
         } catch (\Exception $e) {
@@ -149,30 +149,30 @@ class DocenteContenido extends Component
         }
     }
 
-   // Abrir modal y asignar unidad a eliminar
-public function abrirModalEliminar(Unidad $unidad)
-{
-    $this->unidadAEliminar = $unidad;
-    $this->isDeleteModalOpen = true;
-}
+    // Abrir modal y asignar unidad a eliminar
+    public function abrirModalEliminar(Unidad $unidad)
+    {
+        $this->unidadAEliminar = $unidad;
+        $this->isDeleteModalOpen = true;
+    }
 
-// Cerrar modal sin eliminar
-public function cerrarModalEliminar()
-{
-    $this->unidadAEliminar = null;
-    $this->isDeleteModalOpen = false;
-}
+    // Cerrar modal sin eliminar
+    public function cerrarModalEliminar()
+    {
+        $this->unidadAEliminar = null;
+        $this->isDeleteModalOpen = false;
+    }
 
 
-public function confirmarEliminarUnidad()
-{
-    if (!$this->unidadAEliminar) return;
+    public function confirmarEliminarUnidad()
+    {
+        if (!$this->unidadAEliminar) return;
 
-    $this->unidadAEliminar->delete();
-    session()->flash('delete', 'Unidad eliminada correctamente 🗑️');
-    $this->cargarUnidades();
-    $this->cerrarModalEliminar();
-}
+        $this->unidadAEliminar->delete();
+        session()->flash('delete', 'Unidad eliminada correctamente 🗑️');
+        $this->cargarUnidades();
+        $this->cerrarModalEliminar();
+    }
 
 
     // -------- Adders dinámicos ----------
@@ -220,19 +220,19 @@ public function confirmarEliminarUnidad()
 
     public function render()
     {
-$query = Unidad::with('grado')
-    ->where('docente_id', auth()->id()) // 🔒 Solo unidades del docente
-    ->orderBy('orden');
+        $query = Unidad::with('grado')
+            ->where('docente_id', auth()->id()) // 🔒 Solo unidades del docente
+            ->orderBy('orden');
 
-if ($this->search) {
-    $query->where('titulo', 'like', '%' . $this->search . '%');
-}
+        if ($this->search) {
+            $query->where('titulo', 'like', '%' . $this->search . '%');
+        }
 
-if ($this->grado_id) {
-    $query->where('grado_id', $this->grado_id);
-}
+        if ($this->grado_id) {
+            $query->where('grado_id', $this->grado_id);
+        }
 
-$unidades = $query->paginate($this->perPage);
+        $unidades = $query->paginate($this->perPage);
 
 
         return view('livewire.docente-contenido', [

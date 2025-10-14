@@ -14,20 +14,14 @@ class RolesList extends Component
 
     public RoleForm $form;
     public $isOpen = false;
-    public $modo = 'crear'; // crear | editar
+    public $modo = 'crear';
     public $search = '';
     public $rolVer = null;
     public $verModal = false;
-
-    // Nuevas propiedades para el modal de confirmación
     public $modalConfirmar = false;
     public $rolIdAEliminar = null;
-
     public $menuAccionId = null;
     public $buscarAbierto = false;
-
-
-
 
     protected $paginationTheme = 'tailwind';
 
@@ -79,50 +73,50 @@ class RolesList extends Component
         $this->isOpen = false;
     }
 
-    // Nuevo método para abrir el modal de confirmación
+
     public function confirmarEliminar($id)
     {
         $this->rolIdAEliminar = $id;
         $this->modalConfirmar = true;
     }
-// Nuevo método para ejecutar la eliminación
-public function eliminarConfirmado()
-{
-    $role = Role::findOrFail($this->rolIdAEliminar);
 
-    // Evitar eliminar roles críticos
-    if (in_array($role->name, ['Administrador', 'Cobrador'])) {
-        session()->flash('error', "El rol {$role->name} no se puede eliminar.");
-        $this->modalConfirmar = false; // Cierra el modal
-        $this->rolIdAEliminar = null;  // Resetea el ID
-        return;
+    public function eliminarConfirmado()
+    {
+        $role = Role::findOrFail($this->rolIdAEliminar);
+
+
+        if (in_array($role->name, ['Administrador', 'Docente', 'Estudiante','Tutor'])) {
+            session()->flash('error', "El rol {$role->name} no se puede eliminar.");
+            $this->modalConfirmar = false;  
+            $this->rolIdAEliminar = null;   
+            return;
+        }
+
+        $role->delete();
+        session()->flash('delete', 'Rol eliminado correctamente.');
+        $this->resetPage();
+
+        $this->modalConfirmar = false; 
+        $this->rolIdAEliminar = null;   
     }
 
-    $role->delete();
-    session()->flash('delete', 'Rol eliminado correctamente.');
-    $this->resetPage();
-
-    $this->modalConfirmar = false; // Cierra el modal
-    $this->rolIdAEliminar = null;  // Resetea el ID
-}
-
-public function toggleMenu($id)
-{
-    $this->menuAccionId = $this->menuAccionId === $id ? null : $id;
-}
+    public function toggleMenu($id)
+    {
+        $this->menuAccionId = $this->menuAccionId === $id ? null : $id;
+    }
 
 
 
-public function toggleBuscar()
-{
-    $this->buscarAbierto = !$this->buscarAbierto;
-}
+    public function toggleBuscar()
+    {
+        $this->buscarAbierto = !$this->buscarAbierto;
+    }
 
-public function cerrarBuscar()
-{
-    $this->buscarAbierto = false;
-    $this->search = '';
-}
+    public function cerrarBuscar()
+    {
+        $this->buscarAbierto = false;
+        $this->search = '';
+    }
 
 
 

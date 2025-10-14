@@ -9,62 +9,43 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
- 
+
 use App\Models\Matricula;
- 
+
 
 class UsuarioForm extends Form
 {
     use WithFileUploads;
 
-    // Campos generales
     public $name = '';
     public $username = '';
     public $email = '';
     public $password = '';
     public $profile_photo_path;
-
-    // Manejo temporal de foto en Imgbb
     public $profilePhotoTemp;
     public $profilePhotoDeleteTempUrl;
-
-    // Roles
     public $roles = [];
     public $role_id = null;
     public ?User $usuario = null;
-
-    // Para Cobrador
-    public $cartera_id = null;
-    public $carteras = [];
-
-    // Para Docente
     public $escuela_id = null;
     public $grados = [];
-
-    // Para Estudiante
     public $grado_id = null;
     public $seccion = null;
     public $accesibilidad = [];
     public $docente_id = null;
-
-    //para Tutor
     public $tutor_id = null;
-
-
-
 
     public function mount()
     {
         $this->roles = Role::orderBy('name')->get();
-       
     }
 
 
 
- 
 
 
-      // Verifica si ya existe un usuario con rol Administrador antes de asignar ese rol a otro usuario
+
+    // Verifica si ya existe un usuario con rol Administrador antes de asignar ese rol a otro usuario
     public function ComprobarSiYaExixteUsuarioAdministrador(): bool
     {
         $adminRole = Role::where('name', 'Administrador')->first();
@@ -95,13 +76,10 @@ class UsuarioForm extends Form
             'profile_photo_path' => ['nullable', 'image', 'max:2048'],
         ];
 
-        // Reglas dinámicas según rol
         if ($this->role_id) {
             $role = Role::find($this->role_id)?->name;
 
-            if ($role === 'Cobrador') {
-                $rules['cartera_id'] = ['required', 'exists:carteras,id'];
-            }
+
 
             if ($role === 'Docente') {
                 $rules['escuela_id'] = ['required', 'exists:escuelas,id'];
@@ -113,7 +91,7 @@ class UsuarioForm extends Form
                 $rules['grado_id'] = ['required', 'exists:grados,id'];
                 $rules['seccion'] = ['required', 'string', 'max:2'];
                 $rules['docente_id'] = ['required', 'exists:users,id'];
-                 $rules['tutor_id'] = ['required', 'exists:users,id'];
+                $rules['tutor_id'] = ['required', 'exists:users,id'];
             }
         }
 
@@ -131,37 +109,37 @@ class UsuarioForm extends Form
         ];
     }
 
- public function setUsuario(User $usuario)
-{
-    $this->usuario = $usuario;
-    $this->name = $usuario->name;
-    $this->username = $usuario->username;
-    $this->email = $usuario->email;
-    $this->role_id = $usuario->roles()->pluck('id')->first();
-    $this->escuela_id = $usuario->escuela_id;
+    public function setUsuario(User $usuario)
+    {
+        $this->usuario = $usuario;
+        $this->name = $usuario->name;
+        $this->username = $usuario->username;
+        $this->email = $usuario->email;
+        $this->role_id = $usuario->roles()->pluck('id')->first();
+        $this->escuela_id = $usuario->escuela_id;
 
-    // Para Docente
-    $this->grados = $usuario->grados()->pluck('grados.id')->toArray();
 
-    // Para Estudiante
-    if ($this->role_id) {
-        $roleName = Role::find($this->role_id)?->name;
-        if ($roleName === 'Estudiante') {
-            $matricula = $usuario->matriculas()->latest()->first(); // tomar matrícula actual
-            if ($matricula) {
-                $this->grado_id = $matricula->grado;
-                $this->seccion = $matricula->seccion;
-                $this->docente_id = $matricula->docente_id;
+        $this->grados = $usuario->grados()->pluck('grados.id')->toArray();
+
+
+        if ($this->role_id) {
+            $roleName = Role::find($this->role_id)?->name;
+            if ($roleName === 'Estudiante') {
+                $matricula = $usuario->matriculas()->latest()->first();  
+                if ($matricula) {
+                    $this->grado_id = $matricula->grado;
+                    $this->seccion = $matricula->seccion;
+                    $this->docente_id = $matricula->docente_id;
+                }
+                $this->tutor_id = $usuario->tutor_id;
+
+               
+                $this->accesibilidad = json_decode($usuario->preferencias_accesibilidad, true) ?? [];
             }
-            $this->tutor_id = $usuario->tutor_id;
-
-            // Accesibilidad
-            $this->accesibilidad = json_decode($usuario->preferencias_accesibilidad, true) ?? [];
         }
-    }
 
-    $this->roles = Role::all();
-}
+        $this->roles = Role::all();
+    }
 
 
 
@@ -194,7 +172,7 @@ class UsuarioForm extends Form
 
     protected function payload(): array
     {
-         $data = $this->only(['name', 'username', 'email']);
+        $data = $this->only(['name', 'username', 'email']);
 
         // Si no trae email, generamos uno único
         if (empty($data['email'])) {
@@ -262,13 +240,10 @@ class UsuarioForm extends Form
 
         $usuario->syncRoles([$role->name]);
 
-        if ($role->name === 'Cobrador') {
-            $usuario->update(['cartera_id' => $this->cartera_id]);
-        }
 
-       if ($role->name === 'Docente') {
-        $usuario->update(['escuela_id' => $this->escuela_id]);
-        $usuario->grados()->sync($this->grados); // sincroniza los múltiples grados
+        if ($role->name === 'Docente') {
+            $usuario->update(['escuela_id' => $this->escuela_id]);
+            $usuario->grados()->sync($this->grados); // sincroniza los múltiples grados
         }
 
 

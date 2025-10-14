@@ -27,36 +27,36 @@ class EstudianteContenido extends Component
 
     public $puntajeFinal = 0;
     public $accesibilidad = [
-        'tts' => false, 
-        'isn' => false,  
+        'tts' => false,
+        'isn' => false,
     ];
-    public $fontSize = 16;  
-    public $highContrast = false;  
+    public $fontSize = 16;
+    public $highContrast = false;
 
-   public function mount()
-{
-    $user = Auth::user();
+    public function mount()
+    {
+        $user = Auth::user();
 
-    $this->actividades = Actividad::with('indicador.competencia.unidad.grado')
-        ->whereHas('indicador.competencia.unidad.grado', function ($q) use ($user) {
-            $q->whereIn('id', $user->grados->pluck('id'));
-        })
-        // Solo actividades que el estudiante aún no ha revisado
-        ->whereDoesntHave('intentos', function ($q) use ($user) {
-            $q->where('user_id', $user->id)       // solo sus intentos
-              ->whereHas('revision', function($q2) {
-                  $q2->where('revisado', true);  // revisados
-              });
-        })
-        ->get();
-}
+        $this->actividades = Actividad::with('indicador.competencia.unidad.grado')
+            ->whereHas('indicador.competencia.unidad.grado', function ($q) use ($user) {
+                $q->whereIn('id', $user->grados->pluck('id'));
+            })
+            // Solo actividades que el estudiante aún no ha revisado
+            ->whereDoesntHave('intentos', function ($q) use ($user) {
+                $q->where('user_id', $user->id)       // solo sus intentos
+                    ->whereHas('revision', function ($q2) {
+                        $q2->where('revisado', true);  // revisados
+                    });
+            })
+            ->get();
+    }
 
     public function leerEnunciado()
     {
         $enunciado = $this->items[$this->itemIndex]['enunciado'];
         $this->dispatch('tts', text: $enunciado);
     }
- 
+
     public function aumentarFont()
     {
         $this->fontSize = min($this->fontSize + 2, 36);
@@ -72,42 +72,42 @@ class EstudianteContenido extends Component
     }
 
     public function generarPista()
-{
-    $item = $this->items[$this->itemIndex] ?? null;
-    if (!$item) return;
+    {
+        $item = $this->items[$this->itemIndex] ?? null;
+        if (!$item) return;
 
-    $this->pistaIA = $this->consultarIA("Dame una pista para esta pregunta, sin revelar la respuesta, breve y sencilla, 
+        $this->pistaIA = $this->consultarIA("Dame una pista para esta pregunta, sin revelar la respuesta, breve y sencilla, 
     lenguaje para primaria [6-12 años]: {$item['enunciado']}");
-}
+    }
 
-public function pedirExplicacion()
-{
-    $item = $this->items[$this->itemIndex] ?? null;
-    if (!$item) return;
+    public function pedirExplicacion()
+    {
+        $item = $this->items[$this->itemIndex] ?? null;
+        if (!$item) return;
 
-    $this->explicacionIA = $this->consultarIA("Explica de manera sencilla esta pregunta para estudiantes de primaria [6-12 años], 
+        $this->explicacionIA = $this->consultarIA("Explica de manera sencilla esta pregunta para estudiantes de primaria [6-12 años], 
     sin revelar la respuesta correcta, con ejemplos simples y paso a paso si es matemáticas: {$item['enunciado']}");
-}
+    }
 
-private function consultarIA($input)
-{
-    $client = new \GuzzleHttp\Client();
-    $response = $client->post('https://api.openai.com/v1/chat/completions', [
-        'headers' => [
-            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-            'Content-Type' => 'application/json',
-        ],
-        'json' => [
-            'model' => 'gpt-4o',
-            'messages' => [
-                ['role' => 'user', 'content' => $input],
+    private function consultarIA($input)
+    {
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post('https://api.openai.com/v1/chat/completions', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+                'Content-Type' => 'application/json',
             ],
-        ],
-    ]);
+            'json' => [
+                'model' => 'gpt-4o',
+                'messages' => [
+                    ['role' => 'user', 'content' => $input],
+                ],
+            ],
+        ]);
 
-    $result = json_decode($response->getBody(), true);
-    return $result['choices'][0]['message']['content'] ?? 'No hay respuesta';
-}
+        $result = json_decode($response->getBody(), true);
+        return $result['choices'][0]['message']['content'] ?? 'No hay respuesta';
+    }
 
 
     public function abrirActividad($id)
@@ -160,9 +160,9 @@ private function consultarIA($input)
         $intento->save();
 
         $this->respuesta = null;
-    $this->pistaIA = null;         // limpiar pista
-    $this->explicacionIA = null;
-    
+        $this->pistaIA = null;         // limpiar pista
+        $this->explicacionIA = null;
+
         $this->respuesta = null;
 
         // Avanzar o finalizar

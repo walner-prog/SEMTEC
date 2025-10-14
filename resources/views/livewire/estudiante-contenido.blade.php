@@ -1,6 +1,6 @@
 <div>
     <h2 class="text-2xl font-bold text-center mb-6 text-blue-700">
-        ✨ Actividades disponibles ✨
+        Actividades disponibles
     </h2>
 
     <!-- Notificaciones -->
@@ -162,219 +162,451 @@
     </div>
 
 
+    <div class="hidden md:block">
 
+        <!-- Modal Mejorado para Actividad -->
+        @if($mostrarModal && $actividadSeleccionada)
+        <div x-data="{ open: true, showConfetti: false, darkMode: {{ $highContrast ? 'true' : 'false' }} }"
+            x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
 
-    <!-- Modal Mejorado para Actividad -->
-    @if($mostrarModal && $actividadSeleccionada)
-    <div x-data="{ open: true, showConfetti: false }" x-show="open"
-        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <!-- Modal -->
+            <div class="rounded-3xl  bg-gray-100  dark:bg-gray-900 shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-y-auto p-6 relative transition-colors duration-300"
+                style="font-size: {{ $fontSize }}px;">
 
-        <!-- Modal -->
-        <div class="bg-white rounded-3xl shadow-2xl w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 
-        max-h-[95vh] overflow-y-auto p-6 relative"
-            style="font-size: {{ $fontSize }}px; {{ $highContrast ? 'background-color:#000;color:#fff;' : '' }}">
+                <!-- Accesibilidad -->
+                @if($accesibilidad['isn'])
+                <div class="mb-4 flex justify-center items-center gap-3 flex-wrap text-lg">
+                    <span class="font-semibold flex dark:text-gray-200 items-center gap-2"><i
+                            class="fas fa-universal-access text-2xl"></i>
+                        Ajustes:</span>
+                    <button wire:click="disminuirFont"
+                        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2">
+                        <i class="fas fa-minus-circle text-xl"></i> A-
+                    </button>
+                    <button wire:click="aumentarFont"
+                        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2">
+                        <i class="fas fa-plus-circle text-xl"></i> A+
+                    </button>
+                    <button @click="darkMode = !darkMode" wire:click="toggleHighContrast"
+                        class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition flex items-center gap-2">
+                        <i class="fas fa-adjust text-xl"></i> Contraste
+                    </button>
+                </div>
+                @endif
 
-            <!-- Ajustes accesibilidad -->
-            @if($accesibilidad['isn'])
-            <div class="mb-4 flex justify-center items-center gap-3 flex-wrap text-lg">
-                <span class="font-semibold flex items-center gap-2"><i class="fas fa-universal-access text-2xl"></i>
-                    Ajustes:</span>
-                <button wire:click="disminuirFont"
-                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
-                    <i class="fas fa-minus-circle text-xl"></i> A-
-                </button>
-                <button wire:click="aumentarFont"
-                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
-                    <i class="fas fa-plus-circle text-xl"></i> A+
-                </button>
-                <button wire:click="toggleHighContrast"
-                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition flex items-center gap-2">
-                    <i class="fas fa-adjust text-xl"></i> Contraste
-                </button>
-            </div>
-            @endif
+                <!-- Título actividad -->
+                <div class="text-center mb-6">
+                    <h3
+                        class="font-extrabold text-3xl md:text-4xl text-blue-600 flex items-center justify-center gap-3">
+                        <i class="fas fa-gamepad text-4xl"></i> {{ $actividadSeleccionada->titulo }}
+                    </h3>
+                    <p class="text-lg md:text-xl text-green-700 font-semibold mt-3">
+                        <i class="fas fa-bullseye text-2xl"></i> {{ $actividadSeleccionada->objetivo }}
+                    </p>
+                </div>
 
-            <!-- Título actividad -->
-            <div class="text-center mb-6">
-                <h3 class="font-extrabold text-3xl md:text-4xl text-blue-600 flex items-center justify-center gap-3">
-                    <i class="fas fa-gamepad text-4xl"></i> {{ $actividadSeleccionada->titulo }}
-                </h3>
-                <p class="text-lg md:text-xl text-green-700 font-semibold mt-3">
-                    <i class="fas fa-bullseye text-2xl"></i> {{ $actividadSeleccionada->objetivo }}
-                </p>
-            </div>
-
-            <!-- Multimedia -->
-            @if($actividadSeleccionada->media_video || $actividadSeleccionada->media_documento)
-            <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                @if($actividadSeleccionada->media_video)
-                @php
-                $videoUrl = $actividadSeleccionada->media_video;
-                $embedType = 'file';
-                if(Str::contains($videoUrl,'youtube.com/watch')) {
-                parse_str(parse_url($videoUrl, PHP_URL_QUERY), $query);
-                $videoUrl = isset($query['v']) ? 'https://www.youtube.com/embed/'.$query['v'] : $videoUrl;
-                $embedType='youtube';
-                } elseif(Str::contains($videoUrl,'youtu.be/')) {
-                $videoId = last(explode('/',$videoUrl));
-                $videoUrl = 'https://www.youtube.com/embed/'.$videoId;
-                $embedType='youtube';
-                } elseif(Str::contains($videoUrl,'vimeo.com/')) {
-                $videoId = preg_replace('/[^0-9]/','',$videoUrl);
-                $videoUrl='https://player.vimeo.com/video/'.$videoId;
-                $embedType='vimeo';
-                } elseif(!Str::endsWith($videoUrl,['.mp4','.webm','.ogg'])) {
-                $embedType='link';
-                }
-                @endphp
-                <div class="mb-4 rounded-xl overflow-hidden shadow-lg animate-fadeIn">
-                    @if($embedType==='youtube' || $embedType==='vimeo')
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe src="{{ $videoUrl }}" class="w-full h-64 rounded-lg shadow-lg" frameborder="0"
-                            allowfullscreen></iframe>
+                <!-- Multimedia -->
+                @if($actividadSeleccionada->media_video || $actividadSeleccionada->media_documento)
+                <div class="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @if($actividadSeleccionada->media_video)
+                    @php
+                    $videoUrl = $actividadSeleccionada->media_video;
+                    $embedType = 'file';
+                    if(Str::contains($videoUrl,'youtube.com/watch')) {
+                    parse_str(parse_url($videoUrl, PHP_URL_QUERY), $query);
+                    $videoUrl = isset($query['v']) ? 'https://www.youtube.com/embed/'.$query['v'] : $videoUrl;
+                    $embedType='youtube';
+                    } elseif(Str::contains($videoUrl,'youtu.be/')) {
+                    $videoId = last(explode('/',$videoUrl));
+                    $videoUrl = 'https://www.youtube.com/embed/'.$videoId;
+                    $embedType='youtube';
+                    } elseif(Str::contains($videoUrl,'vimeo.com/')) {
+                    $videoId = preg_replace('/[^0-9]/','',$videoUrl);
+                    $videoUrl='https://player.vimeo.com/video/'.$videoId;
+                    $embedType='vimeo';
+                    } elseif(!Str::endsWith($videoUrl,['.mp4','.webm','.ogg'])) {
+                    $embedType='link';
+                    }
+                    @endphp
+                    <div class="mb-4 rounded-xl overflow-hidden shadow-lg animate-fadeIn">
+                        @if($embedType==='youtube' || $embedType==='vimeo')
+                        <div class="aspect-w-16 aspect-h-9">
+                            <iframe src="{{ $videoUrl }}" class="w-full h-64 md:h-80 rounded-lg shadow-lg"
+                                frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        @elseif($embedType==='file')
+                        <video controls class="w-full rounded-lg shadow-lg">
+                            <source src="{{ $videoUrl }}" type="video/mp4">Tu navegador no soporta video.
+                        </video>
+                        @else
+                        <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 underline font-bold">📺 Ver
+                            video</a>
+                        @endif
                     </div>
-                    @elseif($embedType==='file')
-                    <video controls class="w-full rounded-lg shadow-lg">
-                        <source src="{{ $videoUrl }}" type="video/mp4">Tu navegador no soporta video.
-                    </video>
-                    @else
-                    <a href="{{ $videoUrl }}" target="_blank" class="text-blue-600 underline font-bold">📺 Ver video</a>
+                    @endif
+
+                    @if($actividadSeleccionada->media_documento)
+                    @php
+                    $docUrl=$actividadSeleccionada->media_documento;
+                    $ext=strtolower(pathinfo(parse_url($docUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+                    @endphp
+                    <div class="mb-4 rounded-xl overflow-hidden shadow-lg animate-fadeIn">
+                        @if($ext==='pdf')
+                        <iframe src="{{ $docUrl }}" class="w-full h-64 md:h-80 rounded-lg shadow-lg"></iframe>
+                        @else
+                        <a href="{{ $docUrl }}" target="_blank"
+                            class="text-blue-600 underline font-bold flex items-center gap-2">
+                            📂 Abrir {{ strtoupper($ext) }}
+                        </a>
+                        @endif
+                    </div>
                     @endif
                 </div>
                 @endif
 
-                @if($actividadSeleccionada->media_documento)
-                @php
-                $docUrl=$actividadSeleccionada->media_documento;
-                $ext=strtolower(pathinfo(parse_url($docUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
-                @endphp
-                <div class="mb-4 rounded-xl overflow-hidden shadow-lg animate-fadeIn">
-                    @if($ext==='pdf')
-                    <iframe src="{{ $docUrl }}" class="w-full h-64 md:h-80 rounded-lg shadow-lg"></iframe>
+                @if(!$actividadFinalizada)
+                <!-- Progreso -->
+                <div class="mb-6 flex justify-center flex-wrap gap-3">
+                    @foreach(range(1,count($items)) as $i)
+                    <div
+                        class="w-12 h-12 text-lg rounded-full flex items-center justify-center 
+                {{ $i<=$itemIndex ? 'bg-green-500 text-white shadow-lg animate-bounce' : 'bg-gray-300 text-gray-600 dark:bg-gray-700 dark:text-gray-300' }}">
+                        {{ $i }}
+                    </div>
+                    @endforeach
+                </div>
+
+                <!-- Pregunta -->
+                <div
+                    class="p-6 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 dark:text-gray-200 rounded-3xl shadow-xl text-center mb-6">
+
+                    @if($accesibilidad['tts'])
+                    <button wire:click="leerEnunciado"
+                        class="px-5 py-2 bg-blue-500 text-white rounded-full mb-4 hover:bg-blue-600 transition shadow-md flex items-center gap-2">
+                        <i class="fas fa-volume-up text-xl"></i> Escuchar
+                    </button>
+                    @endif
+
+                    <h4
+                        class="font-bold text-blue-700 dark:text-blue-400 mb-3 flex items-center justify-center gap-2 text-xl md:text-2xl">
+                        <i class="fas fa-question-circle text-2xl"></i> Pregunta {{ $itemIndex+1 }}
+                    </h4>
+
+                    <p class="text-gray-800 dark:text-gray-200 mb-5 text-lg md:text-xl">{{
+                        $items[$itemIndex]['enunciado'] }}</p>
+
+                    <!-- Botones ayuda IA -->
+                    <div class="flex justify-center gap-4 mb-5 flex-wrap">
+                        <button wire:click="generarPista"
+                            class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                            <i class="fas fa-lightbulb text-2xl"></i> Pista
+                        </button>
+                        <button wire:click="pedirExplicacion"
+                            class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                            <i class="fas fa-book-open text-2xl"></i> Explicación
+                        </button>
+                    </div>
+
+                    <!-- IA Feedback -->
+                    @if($pistaIA)
+                    <div
+                        class="mb-3 p-3 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-xl shadow-md">
+                        <i class="fas fa-info-circle"></i> <strong>Pista:</strong> {{ $pistaIA }}
+                    </div>
+                    @endif
+                    @if($explicacionIA)
+                    <div
+                        class="mb-3 p-3 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-xl shadow-md">
+                        <i class="fas fa-book"></i> <strong>Explicación:</strong> {{ $explicacionIA }}
+                    </div>
+                    @endif
+
+                    <!-- Respuesta -->
+                    <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
+                        class="w-full border-2 border-blue-400 dark:border-blue-600 rounded-full p-4 text-lg focus:ring focus:ring-green-300 dark:focus:ring-green-500 shadow-md">
+
+                    @if($respuesta!==null)
+                    @if($respuesta==$items[$itemIndex]['respuesta'])
+                    <div
+                        class="mt-4 text-green-700 dark:text-green-400 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
+                        <i class="fas fa-check-circle text-3xl"></i> ¡Correcto!
+                    </div>
                     @else
-                    <a href="{{ $docUrl }}" target="_blank"
-                        class="text-blue-600 underline font-bold flex items-center gap-2">
-                        📂 Abrir {{ strtoupper($ext) }}
-                    </a>
+                    <div
+                        class="mt-4 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
+                        <i class="fas fa-times-circle text-3xl"></i> Incorrecto: <span class="underline">{{
+                            $items[$itemIndex]['respuesta'] }}</span>
+                    </div>
+                    @endif
                     @endif
                 </div>
-                @endif
-            </div>
-            @endif
 
-
-
-            @if(!$actividadFinalizada)
-            <!-- Progreso -->
-            <div class="mb-6 flex justify-center flex-wrap gap-3">
-                @foreach(range(1,count($items)) as $i)
-                <div
-                    class="w-12 h-12 text-lg rounded-full flex items-center justify-center 
-                {{ $i<=$itemIndex ? 'bg-green-500 text-white shadow-lg animate-bounce' : 'bg-gray-300 text-gray-600' }}">
-                    {{ $i }}
-                </div>
-                @endforeach
-            </div>
-
-            <!-- Pregunta -->
-            <div
-                class="p-6 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 rounded-3xl shadow-xl text-center mb-6">
-
-                @if($accesibilidad['tts'])
-                <button wire:click="leerEnunciado"
-                    class="px-5 py-2 bg-blue-500 text-white rounded-full mb-4 hover:bg-blue-600 transition shadow-md flex items-center gap-2">
-                    <i class="fas fa-volume-up text-xl"></i> Escuchar
-                </button>
-                @endif
-
-                <h4 class="font-bold text-blue-700 mb-3 flex items-center justify-center gap-2 text-xl md:text-2xl">
-                    <i class="fas fa-question-circle text-2xl"></i> Pregunta {{ $itemIndex+1 }}
-                </h4>
-
-                <p class="text-gray-800 mb-5 text-lg md:text-xl">{{ $items[$itemIndex]['enunciado'] }}</p>
-
-                <!-- Botones ayuda IA -->
-                <div class="flex justify-center gap-4 mb-5 flex-wrap">
-                    <button wire:click="generarPista"
-                        class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
-                        <i class="fas fa-lightbulb text-2xl"></i> Pista
+                <!-- Navegación -->
+                <div class="flex justify-between mb-4 flex-wrap gap-2">
+                    <button wire:click="cerrarModal"
+                        class="px-6 py-3 bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-500 text-white rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <i class="fas fa-times"></i> Salir
                     </button>
-                    <button wire:click="pedirExplicacion"
-                        class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
-                        <i class="fas fa-book-open text-2xl"></i> Explicación
-                    </button>
-                </div>
-
-                <!-- IA Feedback -->
-                @if($pistaIA)
-                <div class="mb-3 p-3 bg-purple-100 text-purple-800 rounded-xl shadow-md">
-                    <i class="fas fa-info-circle"></i> <strong>Pista:</strong> {{ $pistaIA }}
-                </div>
-                @endif
-                @if($explicacionIA)
-                <div class="mb-3 p-3 bg-indigo-100 text-indigo-800 rounded-xl shadow-md">
-                    <i class="fas fa-book"></i> <strong>Explicación:</strong> {{ $explicacionIA }}
-                </div>
-                @endif
-
-                <!-- Respuesta -->
-                <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
-                    class="w-full border-2 border-blue-400 rounded-full p-4 text-lg focus:ring focus:ring-green-300 shadow-md">
-
-                @if($respuesta!==null)
-                @if($respuesta==$items[$itemIndex]['respuesta'])
-                <div
-                    class="mt-4 text-green-700 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
-                    <i class="fas fa-check-circle text-3xl"></i> ¡Correcto!
+                    <button wire:click="siguienteItem"
+                        class="px-6 py-3 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <i class="fas fa-arrow-right"></i> {{ $itemIndex < count($items)-1 ? 'Siguiente' : 'Finalizar'
+                            }} </button>
                 </div>
                 @else
-                <div class="mt-4 text-red-600 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
-                    <i class="fas fa-times-circle text-3xl"></i> Incorrecto: <span class="underline">{{
-                        $items[$itemIndex]['respuesta'] }}</span>
+                <!-- Resultados -->
+                <div x-init="$nextTick(()=>showConfetti=true)"
+                    class="p-6 bg-gradient-to-r from-green-300 via-blue-200 to-green-300 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-3xl shadow-2xl text-center mb-6">
+                    <h4 class="font-extrabold text-3xl md:text-4xl text-green-800 dark:text-green-400 mb-4"><i
+                            class="fas fa-trophy text-4xl"></i> ¡Resultados!</h4>
+                    <p class="mb-3 text-xl">✅ Correctas: <span class="font-bold text-green-700 dark:text-green-400">{{
+                            $respuestasCorrectas }}</span></p>
+                    <p class="mb-3 text-xl">❌ Incorrectas: <span class="font-bold text-red-600 dark:text-red-400">{{
+                            $respuestasIncorrectas }}</span></p>
+                    <p class="mb-5 text-xl">📊 Puntaje: <span class="font-bold text-blue-700 dark:text-blue-400">{{
+                            $puntajeFinal }} / {{ count($items) }}</span></p>
+                </div>
+
+                <!-- Botón cerrar -->
+                <div class="flex justify-center mb-4">
+                    <button wire:click="cerrarModal"
+                        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <i class="fas fa-check"></i> Listo
+                    </button>
                 </div>
                 @endif
+            </div>
+        </div>
+        @endif
+
+    </div>
+
+
+
+    <div class="md:hidden">
+
+        @if($mostrarModal && $actividadSeleccionada)
+        <div x-data="{ open: true, showConfetti: false, darkMode: {{ $highContrast ? 'true' : 'false' }} }"
+            x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+
+            <!-- Modal -->
+            <div class="rounded-2xl block  bg-gray-100 dark:bg-gray-900 shadow-xl w-full max-w-md max-h-[95vh] overflow-y-auto p-4 sm:p-6 relative transition-colors duration-300"
+                style="font-size: {{ $fontSize }}px;">
+
+                <!-- Accesibilidad -->
+                @if($accesibilidad['isn'])
+                <div class="mb-3 flex justify-center items-center gap-2 flex-wrap text-sm sm:text-base">
+                    <span class="font-semibold flex dark:text-gray-200 items-center gap-1">
+                        <i class="fas fa-universal-access"></i> Ajustes:
+                    </span>
+                    <button wire:click="disminuirFont"
+                        class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-1 text-xs sm:text-sm">
+                        <i class="fas fa-minus-circle"></i> A-
+                    </button>
+                    <button wire:click="aumentarFont"
+                        class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-1 text-xs sm:text-sm">
+                        <i class="fas fa-plus-circle"></i> A+
+                    </button>
+                    <button @click="darkMode = !darkMode" wire:click="toggleHighContrast"
+                        class="px-3 py-1 bg-gray-200 dark:bg-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center gap-1 text-xs sm:text-sm">
+                        <i class="fas fa-adjust"></i> Contraste
+                    </button>
+                </div>
+                @endif
+
+                <!-- Título actividad -->
+                <div class="text-center mb-4 sm:mb-5">
+                    <h3 class="font-bold text-2xl sm:text-3xl text-blue-600 flex items-center justify-center gap-2">
+                        <i class="fas fa-gamepad text-3xl sm:text-4xl"></i> {{ $actividadSeleccionada->titulo }}
+                    </h3>
+                    <p
+                        class="text-sm sm:text-base text-green-700 font-semibold mt-1 flex items-center justify-center gap-1">
+                        <i class="fas fa-bullseye"></i> {{ $actividadSeleccionada->objetivo }}
+                    </p>
+                </div>
+
+                <!-- Multimedia -->
+                @if($actividadSeleccionada->media_video || $actividadSeleccionada->media_documento)
+                <div class="mb-4 grid grid-cols-1 gap-3">
+                    @if($actividadSeleccionada->media_video)
+                    @php
+                    $videoUrl = $actividadSeleccionada->media_video;
+                    $embedType = 'file';
+                    if(Str::contains($videoUrl,'youtube.com/watch')) {
+                    parse_str(parse_url($videoUrl, PHP_URL_QUERY), $query);
+                    $videoUrl = isset($query['v']) ? 'https://www.youtube.com/embed/'.$query['v'] : $videoUrl;
+                    $embedType='youtube';
+                    } elseif(Str::contains($videoUrl,'youtu.be/')) {
+                    $videoId = last(explode('/',$videoUrl));
+                    $videoUrl = 'https://www.youtube.com/embed/'.$videoId;
+                    $embedType='youtube';
+                    } elseif(Str::contains($videoUrl,'vimeo.com/')) {
+                    $videoId = preg_replace('/[^0-9]/','',$videoUrl);
+                    $videoUrl='https://player.vimeo.com/video/'.$videoId;
+                    $embedType='vimeo';
+                    } elseif(!Str::endsWith($videoUrl,['.mp4','.webm','.ogg'])) {
+                    $embedType='link';
+                    }
+                    @endphp
+                    <div class="rounded-xl overflow-hidden shadow-md">
+                        @if($embedType==='youtube' || $embedType==='vimeo')
+                        <div class="aspect-w-16 aspect-h-9">
+                            <iframe src="{{ $videoUrl }}" class="w-full h-48 sm:h-64 rounded-lg shadow" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        @elseif($embedType==='file')
+                        <video controls class="w-full rounded-lg shadow">
+                            <source src="{{ $videoUrl }}" type="video/mp4">Tu navegador no soporta video.
+                        </video>
+                        @else
+                        <a href="{{ $videoUrl }}" target="_blank"
+                            class="text-blue-600 underline font-semibold text-sm sm:text-base">📺 Ver video</a>
+                        @endif
+                    </div>
+                    @endif
+
+                    @if($actividadSeleccionada->media_documento)
+                    @php
+                    $docUrl=$actividadSeleccionada->media_documento;
+                    $ext=strtolower(pathinfo(parse_url($docUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+                    @endphp
+                    <div class="rounded-xl overflow-hidden shadow-md">
+                        @if($ext==='pdf')
+                        <iframe src="{{ $docUrl }}" class="w-full h-48 sm:h-64 rounded-lg shadow"></iframe>
+                        @else
+                        <a href="{{ $docUrl }}" target="_blank"
+                            class="text-blue-600 underline font-semibold flex items-center gap-1 text-sm sm:text-base">
+                            📂 Abrir {{ strtoupper($ext) }}
+                        </a>
+                        @endif
+                    </div>
+                    @endif
+                </div>
+                @endif
+
+                @if(!$actividadFinalizada)
+                <!-- Progreso compacto -->
+                <div class="mb-4 flex justify-center flex-wrap gap-1">
+                    @foreach(range(1,count($items)) as $i)
+                    <div
+                        class="w-8 h-8 text-sm sm:text-base rounded-full flex items-center justify-center 
+                {{ $i<=$itemIndex ? 'bg-green-500 text-white shadow animate-bounce' : 'bg-gray-300 text-gray-600 dark:bg-gray-700 dark:text-gray-300' }}">
+                        {{ $i }}
+                    </div>
+                    @endforeach
+                </div>
+
+                <!-- Pregunta -->
+                <div
+                    class="p-4 sm:p-5 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 dark:text-gray-200 rounded-2xl shadow-md text-center mb-4">
+
+                    @if($accesibilidad['tts'])
+                    <button wire:click="leerEnunciado"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-full mb-2 hover:bg-blue-600 transition shadow flex items-center gap-1 text-sm sm:text-base">
+                        <i class="fas fa-volume-up"></i> Escuchar
+                    </button>
+                    @endif
+
+                    <h4
+                        class="font-bold text-blue-700 dark:text-blue-400 mb-2 flex items-center justify-center gap-1 text-base sm:text-lg">
+                        <i class="fas fa-question-circle"></i> Pregunta {{ $itemIndex+1 }}
+                    </h4>
+
+                    <p class="text-gray-800 dark:text-gray-200 mb-3 text-sm sm:text-base">{{
+                        $items[$itemIndex]['enunciado'] }}</p>
+
+                    <!-- Botones ayuda IA compactos -->
+                    <div class="flex justify-center gap-2 mb-3 flex-wrap">
+                        <button wire:click="generarPista"
+                            class="px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow text-xs sm:text-sm flex items-center gap-1">
+                            <i class="fas fa-lightbulb"></i> Pista
+                        </button>
+                        <button wire:click="pedirExplicacion"
+                            class="px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow text-xs sm:text-sm flex items-center gap-1">
+                            <i class="fas fa-book-open"></i> Explicación
+                        </button>
+                    </div>
+
+                    <!-- IA Feedback -->
+                    @if($pistaIA)
+                    <div
+                        class="mb-2 p-2 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-lg shadow text-sm sm:text-base">
+                        <i class="fas fa-info-circle"></i> <strong>Pista:</strong> {{ $pistaIA }}
+                    </div>
+                    @endif
+                    @if($explicacionIA)
+                    <div
+                        class="mb-2 p-2 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-lg shadow text-sm sm:text-base">
+                        <i class="fas fa-book"></i> <strong>Explicación:</strong> {{ $explicacionIA }}
+                    </div>
+                    @endif
+
+                    <!-- Respuesta -->
+                    <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
+                        class="w-full border-2 border-blue-400 dark:border-blue-600 rounded-full p-3 text-sm sm:text-base focus:ring focus:ring-green-300 dark:focus:ring-green-500 shadow">
+
+                    @if($respuesta!==null)
+                    @if($respuesta==$items[$itemIndex]['respuesta'])
+                    <div
+                        class="mt-3 text-green-700 dark:text-green-400 font-bold flex items-center justify-center gap-1 animate-bounce text-base sm:text-lg">
+                        <i class="fas fa-check-circle"></i> ¡Correcto!
+                    </div>
+                    @else
+                    <div
+                        class="mt-3 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-1 animate-bounce text-base sm:text-lg">
+                        <i class="fas fa-times-circle"></i> Incorrecto: <span class="underline">{{
+                            $items[$itemIndex]['respuesta'] }}</span>
+                    </div>
+                    @endif
+                    @endif
+                </div>
+
+                <!-- Navegación compacta -->
+                <div class="flex justify-between mb-3 flex-wrap gap-2">
+                    <button wire:click="cerrarModal"
+                        class="flex-1 px-4 py-2 bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 dark:hover:bg-gray-500 text-white rounded-full shadow text-sm sm:text-base flex items-center justify-center gap-1">
+                        <i class="fas fa-times"></i> Salir
+                    </button>
+                    <button wire:click="siguienteItem"
+                        class="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white font-bold rounded-full shadow text-sm sm:text-base flex items-center justify-center gap-1">
+                        <i class="fas fa-arrow-right"></i> {{ $itemIndex < count($items)-1 ? 'Siguiente' : 'Finalizar'
+                            }} </button>
+                </div>
+
+                @else
+                <!-- Resultados -->
+                <div x-init="$nextTick(()=>showConfetti=true)"
+                    class="p-4 sm:p-5 bg-gradient-to-r from-green-300 via-blue-200 to-green-300 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 rounded-2xl shadow-xl text-center mb-4 text-sm sm:text-base">
+                    <h4 class="font-bold text-2xl sm:text-3xl text-green-800 dark:text-green-400 mb-2"><i
+                            class="fas fa-trophy"></i> ¡Resultados!</h4>
+                    <p class="mb-1">✅ Correctas: <span class="font-bold text-green-700 dark:text-green-400">{{
+                            $respuestasCorrectas }}</span></p>
+                    <p class="mb-1">❌ Incorrectas: <span class="font-bold text-red-600 dark:text-red-400">{{
+                            $respuestasIncorrectas }}</span></p>
+                    <p class="mb-2">📊 Puntaje: <span class="font-bold text-blue-700 dark:text-blue-400">{{
+                            $puntajeFinal }} / {{ count($items) }}</span></p>
+                </div>
+
+                <div class="flex justify-center mb-3">
+                    <button wire:click="cerrarModal"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold rounded-full shadow flex items-center gap-1 text-sm sm:text-base">
+                        <i class="fas fa-check"></i> Listo
+                    </button>
+                </div>
                 @endif
             </div>
-
-            <!-- Navegación -->
-            <div class="flex justify-between mb-4">
-                <button wire:click="cerrarModal"
-                    class="px-6 py-3 bg-gray-400 hover:bg-gray-500 text-white rounded-full shadow-md transition flex items-center gap-2 text-lg">
-                    <i class="fas fa-times"></i> Salir
-                </button>
-                <button wire:click="siguienteItem"
-                    class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
-                    <i class="fas fa-arrow-right"></i> {{ $itemIndex < count($items)-1 ? 'Siguiente' : 'Finalizar' }}
-                        </button>
-            </div>
-            @else
-            <!-- Resultados -->
-            <div x-init="$nextTick(()=>showConfetti=true)"
-                class="p-6 bg-gradient-to-r from-green-300 via-blue-200 to-green-300 rounded-3xl shadow-2xl text-center mb-6">
-                <h4 class="font-extrabold text-3xl md:text-4xl text-green-800 mb-4"><i
-                        class="fas fa-trophy text-4xl"></i> ¡Resultados!</h4>
-                <p class="mb-3 text-xl">✅ Correctas: <span class="font-bold text-green-700">{{ $respuestasCorrectas
-                        }}</span></p>
-                <p class="mb-3 text-xl">❌ Incorrectas: <span class="font-bold text-red-600">{{ $respuestasIncorrectas
-                        }}</span></p>
-                <p class="mb-5 text-xl">📊 Puntaje: <span class="font-bold text-blue-700">{{ $puntajeFinal }} / {{
-                        count($items) }}</span></p>
-            </div>
-
-            <!-- Botón cerrar -->
-            <div class="flex justify-center mb-4">
-                <button wire:click="cerrarModal"
-                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
-                    <i class="fas fa-check"></i> Listo
-                </button>
-            </div>
-            @endif
         </div>
+        @endif
+
     </div>
-    @endif
+
+
+
 
 
     <!-- CSS Confeti (Tailwind + custom) -->

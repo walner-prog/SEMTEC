@@ -12,7 +12,9 @@ use Illuminate\Validation\ValidationException;
 
 class ContenidoForm
 {
-    // ---------------- Guardar ----------------
+
+ 
+
     public function guardar(array $form)
     {
         $this->validarFormulario($form);
@@ -23,7 +25,7 @@ class ContenidoForm
                 $ultimoOrden = Unidad::where('grado_id', $form['unidad']['grado_id'])->max('orden');
                 $form['unidad']['orden'] = $ultimoOrden ? $ultimoOrden + 1 : 1;
             }
-
+            
             $form['unidad']['docente_id'] = auth()->id();
             $unidad = Unidad::create($form['unidad']);
 

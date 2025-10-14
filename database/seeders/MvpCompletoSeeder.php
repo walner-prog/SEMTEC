@@ -200,15 +200,23 @@ class MvpCompletoSeeder extends Seeder
             ]);
             $user->assignRole('Estudiante');
 
-            // 🔹 Crear matrícula
-            Matricula::create([
-                'user_id' => $user->id,
-                'docente_id' => $docente->id,
-                'escuela_id' => $escuela->id,
-                'anio' => date('Y'),
-                'grado' => $estData['grado'],
-                'seccion' => $estData['seccion']
-            ]);
+            $docenteDelGrado = User::role('Docente')
+    ->whereHas('grados', fn($q) => $q->where('grados.id', $estData['grado']))
+    ->first();
+
+
+Matricula::create([
+    'user_id' => $user->id,
+    'docente_id' => $docenteDelGrado->id,
+    'escuela_id' => $escuela->id,
+    'anio' => date('Y'),
+    'grado' => $estData['grado'],
+    'seccion' => $estData['seccion'],
+    'fecha_matricula' => date('Y-m-d'),
+]);
+
+
+           
 
             // 🔹 Asignar estudiante al grado (tabla pivote grado_user)
             $user->grados()->attach($estData['grado']);

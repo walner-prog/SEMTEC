@@ -11,16 +11,16 @@ class SeederTercerNivel extends Seeder
     public function run(): void
     {
         $juegosTercerGrado = [
-            ["Suma Avanzada", "fa-plus", "Suma números hasta 100.", 3],
-            ["Resta Avanzada", "fa-minus", "Resta números hasta 100.", 3],
-            ["Multiplicación Intermedia", "fa-xmark", "Multiplica números hasta 10.", 3],
-            ["División Intermedia", "fa-divide", "Divide números hasta 100.", 3],
-            ["Fracciones Básicas", "fa-pie-chart", "Aprende a sumar y comparar fracciones simples.", 3],
-            ["Secuencias Numéricas", "fa-list-ol", "Completa secuencias hasta 100.", 3],
-            ["Geometría Básica", "fa-shapes", "Identifica figuras y sus propiedades.", 3],
-            ["Medidas y Unidades", "fa-ruler", "Aprende centímetros, metros y kilogramos.", 3],
-            ["Problemas Matemáticos", "fa-brain", "Resuelve problemas cotidianos con números mayores.", 3],
-            ["Razonamiento Lógico", "fa-puzzle-piece", "Ejercita tu mente con acertijos simples.", 3],
+            ["Suma Avanzada", "fa-plus", "Suma números hasta 100.", 3, "Matemáticas"],
+            ["Resta Avanzada", "fa-minus", "Resta números hasta 100.", 3, "Matemáticas"],
+            ["Multiplicación Intermedia", "fa-xmark", "Multiplica números hasta 10.", 3, "Matemáticas"],
+            ["División Intermedia", "fa-divide", "Divide números hasta 100.", 3, "Matemáticas"],
+            ["Fracciones Básicas", "fa-pie-chart", "Aprende a sumar y comparar fracciones simples.", 3, "Fracciones"],
+            ["Secuencias Numéricas", "fa-list-ol", "Completa secuencias hasta 100.", 3, "Matemáticas"],
+            ["Geometría Básica", "fa-shapes", "Identifica figuras y sus propiedades.", 3, "Geometría/Medidas"],
+            ["Medidas y Unidades", "fa-ruler", "Aprende centímetros, metros y kilogramos.", 3, "Geometría/Medidas"],
+            ["Problemas Matemáticos", "fa-brain", "Resuelve problemas cotidianos con números mayores.", 3, "Razonamiento/Problemas"],
+            ["Razonamiento Lógico", "fa-puzzle-piece", "Ejercita tu mente con acertijos simples.", 3, "Razonamiento/Problemas"],
         ];
 
         foreach ($juegosTercerGrado as $j) {
@@ -32,6 +32,7 @@ class SeederTercerNivel extends Seeder
                 'tipo' => 'quiz',
                 'bloqueado' => false,
                 'nivel' => $j[3],
+                'categoria' => $j[4], // ← agregamos categoría
             ]);
 
             // Preguntas por juego

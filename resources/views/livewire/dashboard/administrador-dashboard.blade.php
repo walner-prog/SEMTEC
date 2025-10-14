@@ -13,9 +13,15 @@
                            ? 'border-b-2 border-blue-500 font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 shadow-md' 
                            : 'text-gray-600 dark:text-gray-300 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                 <i class="fas fa-chalkboard"></i> Escuela
-            </button>
+              </button>
 
-            
+              <button wire:click="setTab('estudiantes')" 
+                class="flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-t-lg 
+                       {{ $tab === 'estudiantes' 
+                           ? 'border-b-2 border-blue-500 font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 shadow-md' 
+                           : 'text-gray-600 dark:text-gray-300 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                <i class="fas fa-user-graduate"></i> Estudiantes
+              </button>
 
            
 
@@ -25,10 +31,13 @@
     </div>
 
     {{-- Contenido dinámico --}}
-    <div class="mt-6 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+    <div class="mt-6 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
         @if($tab === 'escuela')
             @livewire('escuelas-list')
        
+        @endif
+        @if($tab === 'estudiantes')
+            @livewire('estudiantes-list')
         @endif
     </div>
 </div>

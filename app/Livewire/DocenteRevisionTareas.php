@@ -124,7 +124,7 @@ class DocenteRevisionTareas extends Component
     {
         return $this->getIntentosQuery()
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(300);
     }
 
     // -----------------------------

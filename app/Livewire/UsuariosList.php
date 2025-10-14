@@ -14,29 +14,25 @@ class UsuariosList extends Component
 
     public UsuarioForm $form;
     public $isOpen = false;
-    public $modo = 'crear'; // crear | editar
+    public $modo = 'crear'; 
     public $search = '';
     public $verModal = false;
     public $usuarioVer = null;
     public $modalConfirmar = false;
     public $usuarioIdAEliminar = null;
-
-    // 🔹 Estado para menú de acciones
     public $menuAccionId = null;
-
-        // Búsqueda dinámica de tutores
-     public $searchTutor = '';
-     public $tutores = [];
-
+    public $searchTutor = '';
+    public $tutores = [];
     protected $paginationTheme = 'tailwind';
-
+    
     public function updatingSearch()
+
     {
         $this->resetPage();
     }
 
     // -------------------------------
-    // 📌 Menú Acciones
+    //  Menú Acciones
     // -------------------------------
     public function toggleMenu($id)
     {
@@ -62,7 +58,7 @@ class UsuariosList extends Component
 
 
     // -------------------------------
-    // 📌 CRUD
+    //  CRUD
     // -------------------------------
     public function abrirModalCrear()
     {
@@ -125,7 +121,7 @@ class UsuariosList extends Component
         $this->resetForm();
         $this->isOpen = false;
     }
-
+ 
     // -------------------------------
     //  Eliminar
     // -------------------------------
@@ -134,6 +130,7 @@ class UsuariosList extends Component
         $this->usuarioIdAEliminar = $id;
         $this->modalConfirmar = true;
         $this->closeMenu();
+       
     }
 
     public function eliminarConfirmado()
@@ -163,6 +160,7 @@ class UsuariosList extends Component
     {
         $this->form->reset();
         $this->form->usuario = null;
+        
     }
 
    
@@ -189,7 +187,7 @@ class UsuariosList extends Component
         $usuarios = User::query()
             ->where('name', 'like', "%{$this->search}%")
             ->orWhere('email', 'like', "%{$this->search}%")
-            ->paginate(5);
+            ->paginate(200);
 
         return view('livewire.usuarios-list', compact('usuarios'));
     }

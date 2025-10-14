@@ -14,6 +14,8 @@
                                                : 'text-gray-600 dark:text-gray-300 hover:text-blue-500' }}">
                 Actividades
             </button>
+
+           
             
         </div>
     </div>
@@ -24,12 +26,7 @@
             @livewire('estudiante-panel')
         @elseif($tab === 'contenido')
             @livewire('estudiante-contenido')
-        @elseif($tab === 'seguimiento')
-            @livewire('docente-seguimiento')
-        @elseif($tab === 'revision')
-            @livewire('docente-revision-tareas')
-        @elseif($tab === 'reportes')
-            @livewire('docente-reportes-desempeno')
+       
         @endif
     </div>
 </div>

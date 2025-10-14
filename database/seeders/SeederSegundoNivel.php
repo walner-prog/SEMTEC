@@ -10,17 +10,17 @@ class SeederSegundoNivel extends Seeder
 {
     public function run(): void
     {
-        $juegosSegundoGrado = [
-            ["Suma Avanzada", "fa-plus", "Suma números de 1 a 20.", 2],
-            ["Resta Avanzada", "fa-minus", "Resta números de 1 a 20.", 2],
-            ["Multiplicación Básica", "fa-xmark", "Aprende las tablas del 2 y 3.", 2],
-            ["División Básica", "fa-divide", "Divide números pequeños.", 2],
-            ["Secuencias Numéricas", "fa-list-ol", "Completa las secuencias.", 2],
-            ["Figuras Geométricas", "fa-shapes", "Reconoce y dibuja figuras.", 2],
-            ["Medidas Simples", "fa-ruler", "Aprende centímetros y metros.", 2],
-            ["Problemas de Suma y Resta", "fa-brain", "Resuelve problemas cotidianos.", 2],
-            ["Razonamiento Lógico", "fa-puzzle-piece", "Ejercita tu mente con acertijos.", 2],
-            ["Comparación de Números", "fa-arrows-left-right", "Mayor, menor o igual.", 2],
+       $juegosSegundoGrado = [
+            ["Suma Avanzada", "fa-plus", "Suma números de 1 a 20.", 2, "Matemáticas"],
+            ["Resta Avanzada", "fa-minus", "Resta números de 1 a 20.", 2, "Matemáticas"],
+            ["Multiplicación Básica", "fa-xmark", "Aprende las tablas del 2 y 3.", 2, "Matemáticas"],
+            ["División Básica", "fa-divide", "Divide números pequeños.", 2, "Matemáticas"],
+            ["Secuencias Numéricas", "fa-list-ol", "Completa las secuencias.", 2, "Matemáticas"],
+            ["Figuras Geométricas", "fa-shapes", "Reconoce y dibuja figuras.", 2, "Geometría/Medidas"],
+            ["Medidas Simples", "fa-ruler", "Aprende centímetros y metros.", 2, "Geometría/Medidas"],
+            ["Problemas de Suma y Resta", "fa-brain", "Resuelve problemas cotidianos.", 2, "Razonamiento/Problemas"],
+            ["Razonamiento Lógico", "fa-puzzle-piece", "Ejercita tu mente con acertijos.", 2, "Razonamiento/Problemas"],
+            ["Comparación de Números", "fa-arrows-left-right", "Mayor, menor o igual.", 2, "Matemáticas"],
         ];
 
         foreach ($juegosSegundoGrado as $j) {
@@ -32,6 +32,7 @@ class SeederSegundoNivel extends Seeder
                 'tipo' => 'quiz',
                 'bloqueado' => false,
                 'nivel' => $j[3],
+                'categoria' => $j[4], // ← agregamos categoría
             ]);
 
             // Preguntas por juego

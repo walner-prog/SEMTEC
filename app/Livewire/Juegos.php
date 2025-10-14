@@ -12,13 +12,17 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\ReaccionJuego;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+
+
+
+
 
 class Juegos extends Component
 {
     public $puntos = 0;
     public $monedas = 0;
     public $trofeos = 0;
-
     public $modalAbierto = false;
     public $juegoSeleccionado;
     public $preguntas = [];
@@ -29,6 +33,10 @@ class Juegos extends Component
     public $explicacionIA = '';
     public $respuestaCorrecta = null;
     public $mensajeFinal = '';
+    public $categoriaSeleccionada = null;
+    public $modalResumenAbierto = false;
+    public $resumenDatos = [];
+    
 
 
     protected $listeners = ['abrirJuego' => 'abrirJuego'];
@@ -46,56 +54,162 @@ class Juegos extends Component
         $this->trofeos = $estadisticas->trofeos;
     }
 
-   public function render()
+  public function render()
 {
     $user = Auth::user();
 
-    // Traemos todos los juegos con sus contadores
-    $juegos = Juego::withCount([
+    // Determinar nivel del estudiante
+    $nivel = null;
+    if ($user->hasRole('Estudiante')) {
+        $matricula = $user->matriculas()->latest()->first();
+        $nivel = $matricula?->grado;
+    }
+
+    // Traer los juegos con conteo de reacciones
+    $juegosQuery = Juego::withCount([
         'reacciones as me_gusta_count' => fn($q) => $q->where('tipo', 'me_gusta'),
         'reacciones as corazon_count' => fn($q) => $q->where('tipo', 'corazon')
     ]);
 
-    // Si el usuario es estudiante, filtramos por nivel
-    if ($user->hasRole('Estudiante')) {
-        $matricula = $user->matriculas()->latest()->first();
-        $nivel = $matricula?->grado; // el grado del estudiante corresponde al nivel del juego
-
-        if ($nivel) {
-            $juegos = $juegos->where('nivel', $nivel);
-        }
+    // Filtrar por nivel
+    if ($nivel) {
+        $juegosQuery->where('nivel', $nivel);
     }
 
-    $juegos = $juegos->get();
+    // Filtrar por categoría seleccionada
+    if ($this->categoriaSeleccionada) {
+        $juegosQuery->where('categoria', $this->categoriaSeleccionada);
+    }
+
+    $juegos = $juegosQuery->get();
+
+    // Traer progreso del usuario en los juegos
+    $usuarioJuegos = UsuarioJuego::where('user_id', $user->id)
+        ->get()
+        ->keyBy('juego_id');
+
+    foreach ($juegos as $juego) {
+        $progreso = $usuarioJuegos->get($juego->id);
+
+        $juego->ya_jugado = (bool) $progreso;
+        $juego->puntaje_usuario = $progreso->puntaje ?? 0;
+        $juego->racha_actual = $progreso->racha_actual ?? 0;
+        $juego->racha_maxima = $progreso->racha_maxima ?? 0;
+        $juego->dias_jugados = $progreso->dias_jugados ?? 0;
+
+        // Logros obtenidos por el usuario en este juego
+        $juego->logros_obtenidos = $user->logros()
+            ->wherePivot('juego_id', $juego->id)
+            ->get();
+    }
 
     $juegosDisponibles = $juegos->where('bloqueado', false);
-    $juegosBloqueados  = $juegos->where('bloqueado', true);
+    $juegosBloqueados = $juegos->where('bloqueado', true);
+
+    // Categorías filtradas por nivel del estudiante
+    $categoriasQuery = Juego::select('categoria')->distinct();
+    if ($nivel) {
+        $categoriasQuery->where('nivel', $nivel);
+    }
+    $categorias = $categoriasQuery->pluck('categoria');
 
     return view('livewire.juegos', [
         'juegosDisponibles' => $juegosDisponibles,
-        'juegosBloqueados'  => $juegosBloqueados,
-        'user' => $user
+        'juegosBloqueados' => $juegosBloqueados,
+        'categorias' => $categorias,
+        'user' => $user,
     ]);
 }
 
 
 
-
-    public function abrirJuego($juegoId)
+    // 🔹 Método para seleccionar categoría
+    public function filtrarPorCategoria($categoria)
     {
-        $this->juegoSeleccionado = Juego::with('preguntas')->findOrFail($juegoId);
-        $this->preguntas = $this->juegoSeleccionado->preguntas()
-            ->inRandomOrder()
-            ->take(10)
-            ->get()
-            ->toArray();
-        $this->indicePregunta = 0;
-        $this->puntajeActual = 0;
-        $this->mensajeMotivador = '';
-        $this->pistaIA = '';
-        $this->explicacionIA = '';
-        $this->modalAbierto = true;
+        $this->categoriaSeleccionada = $categoria;
     }
+
+    // 🔹 Método para limpiar filtro
+    public function limpiarFiltro()
+    {
+        $this->categoriaSeleccionada = null;
+    }
+
+
+public function abrirJuego($juegoId)
+{
+    $user = Auth::user();
+
+    // 🔹 Cargar el juego con sus preguntas
+    $this->juegoSeleccionado = Juego::with('preguntas')->findOrFail($juegoId);
+
+    // 🔹 Logros obtenidos
+    $this->juegoSeleccionado->logros_obtenidos = $user->logros()
+        ->wherePivot('juego_id', $this->juegoSeleccionado->id)
+        ->get() ?? collect();
+
+    // 🔹 Cargar preguntas aleatorias
+    $this->preguntas = $this->juegoSeleccionado->preguntas()
+        ->inRandomOrder()
+        ->take(10)
+        ->get()
+        ->toArray();
+
+    // 🔹 Progreso del usuario
+    $usuarioJuego = UsuarioJuego::firstOrCreate([
+        'user_id' => $user->id,
+        'juego_id' => $juegoId,
+    ]);
+
+    $this->juegoSeleccionado->racha_actual = $usuarioJuego->racha_actual ?? 0;
+    $this->juegoSeleccionado->racha_maxima = $usuarioJuego->racha_maxima ?? 0;
+    $this->juegoSeleccionado->dias_jugados = $usuarioJuego->dias_jugados ?? 0;
+
+    // 🔹 Reiniciar estado del componente
+    $this->indicePregunta = 0;
+    $this->puntajeActual = 0;
+    $this->mensajeMotivador = '';
+    $this->pistaIA = '';
+    $this->explicacionIA = '';
+    $this->modalAbierto = true;
+
+    // 🔹 Actualizar racha si juega hoy
+    $hoy = Carbon::today();
+    $ultima = $usuarioJuego->ultima_partida ? Carbon::parse($usuarioJuego->ultima_partida)->startOfDay() : null;
+
+    if (!$ultima || $ultima->lt($hoy)) {
+        if ($ultima && $ultima->diffInDays($hoy) === 1) {
+            $usuarioJuego->racha_actual += 1;
+            $usuarioJuego->racha_maxima = max($usuarioJuego->racha_maxima, $usuarioJuego->racha_actual);
+        } else {
+            $usuarioJuego->racha_actual = 1;
+        }
+        $usuarioJuego->dias_jugados = ($usuarioJuego->dias_jugados ?? 0) + 1;
+        $usuarioJuego->ultima_partida = now();
+        $usuarioJuego->save();
+
+        // 🔹 Actualizar propiedades del componente para mostrar en modal
+        $this->juegoSeleccionado->racha_actual = $usuarioJuego->racha_actual;
+        $this->juegoSeleccionado->racha_maxima = $usuarioJuego->racha_maxima;
+        $this->juegoSeleccionado->dias_jugados = $usuarioJuego->dias_jugados;
+    }
+}
+
+
+
+public function diasDesdeUltimaPartida($juegoId)
+{
+    $registro = \App\Models\UsuarioJuego::where('user_id', Auth::id())
+        ->where('juego_id', $juegoId)
+        ->first();
+
+    if (!$registro || !$registro->ultima_partida) {
+        return 'Primera vez jugando';
+    }
+
+    return \Carbon\Carbon::parse($registro->ultima_partida)->diffForHumans();
+}
+
 
     public function responder($respuesta)
     {
@@ -109,11 +223,10 @@ class Juegos extends Component
             $this->respuestaCorrecta = false;
         }
 
-        // Progreso actual
+
         $preguntasRespondidas = $this->indicePregunta + 1;
         $porcentaje = ($this->puntajeActual / ($totalPreguntas * 2)) * 100;
 
-        // 🎯 Mensajes dinámicos por rango
         if ($this->respuestaCorrecta) {
             if ($porcentaje >= 80) {
                 $mensajes = [
@@ -231,73 +344,133 @@ class Juegos extends Component
         return $result['choices'][0]['message']['content'] ?? 'No hay respuesta';
     }
 
-    public function jugar($puntajeObtenido)
-    {
-        $user = Auth::user();
-        $juego = $this->juegoSeleccionado;
 
+public function jugar($puntajeObtenido)
+{
+    $user = Auth::user();
+    $juego = $this->juegoSeleccionado;
+
+    DB::transaction(function () use ($user, $juego, $puntajeObtenido) {
+
+        // 1️⃣ Registrar progreso del usuario en el juego
         $usuarioJuego = UsuarioJuego::firstOrNew([
             'user_id' => $user->id,
             'juego_id' => $juego->id,
         ]);
+
         $usuarioJuego->intentos = ($usuarioJuego->intentos ?? 0) + 1;
         $usuarioJuego->puntaje = $puntajeObtenido;
-        $usuarioJuego->ultima_partida = Carbon::now();
         $usuarioJuego->completado = true;
+
+        // 🔹 Calcular rachas y días jugados
+        $hoy = Carbon::today();
+        $ultima = $usuarioJuego->ultima_partida ? Carbon::parse($usuarioJuego->ultima_partida)->startOfDay() : null;
+
+        if (!$ultima || $ultima->lt($hoy)) {
+            if ($ultima && $ultima->diffInDays($hoy) === 1) {
+                $usuarioJuego->racha_actual = ($usuarioJuego->racha_actual ?? 0) + 1;
+                $usuarioJuego->racha_maxima = max($usuarioJuego->racha_maxima ?? 0, $usuarioJuego->racha_actual);
+            } else {
+                $usuarioJuego->racha_actual = 1;
+            }
+            $usuarioJuego->dias_jugados = ($usuarioJuego->dias_jugados ?? 0) + 1;
+        }
+
+        $usuarioJuego->ultima_partida = Carbon::now();
         $usuarioJuego->save();
 
-        // logros y recompensas
+        // 2️⃣ Logros obtenidos
         foreach ($juego->logros as $logro) {
             if ($puntajeObtenido >= $logro->puntos_requeridos) {
-                $user->logros()->syncWithoutDetaching([$logro->id => ['fecha_obtenido' => Carbon::now()]]);
+                $user->logros()->syncWithoutDetaching([
+                    $logro->id => [
+                        'fecha_obtenido' => Carbon::now(),
+                        'juego_id' => $juego->id
+                    ]
+                ]);
             }
         }
 
+        // 3️⃣ Recompensas obtenidas
         $recompensas = Recompensa::where('puntos_requeridos', '<=', $puntajeObtenido)->get();
         foreach ($recompensas as $recompensa) {
-            $user->recompensas()->syncWithoutDetaching([$recompensa->id => ['fecha' => Carbon::now()]]);
+            $user->recompensas()->syncWithoutDetaching([
+                $recompensa->id => ['fecha' => Carbon::now()]
+            ]);
         }
 
+        // 4️⃣ Actualizar estadísticas globales
         $estadisticas = EstadisticaUsuario::firstOrCreate(
             ['user_id' => $user->id],
             ['puntos' => 0, 'monedas' => 0, 'trofeos' => 0]
         );
+
         $estadisticas->puntos += $puntajeObtenido;
         $estadisticas->monedas += intval($puntajeObtenido / 2);
         if ($puntajeObtenido >= 80) $estadisticas->trofeos += 1;
         $estadisticas->save();
 
+        // 5️⃣ Desbloquear juegos según requisitos
+        Juego::where('bloqueado', true)
+            ->where(fn($q) => $q
+                ->where('requisito_puntos', '<=', $estadisticas->puntos)
+                ->orWhere('requisito_monedas', '<=', $estadisticas->monedas)
+                ->orWhere('requisito_trofeos', '<=', $estadisticas->trofeos)
+            )
+            ->update(['bloqueado' => false]);
+
+        // 6️⃣ Actualizar propiedades del componente
         $this->puntos = $estadisticas->puntos;
         $this->monedas = $estadisticas->monedas;
         $this->trofeos = $estadisticas->trofeos;
 
-        // desbloquear juegos
-        Juego::where('bloqueado', true)
-            ->where(fn($q) => $q->where('requisito_puntos', '<=', $estadisticas->puntos)
-                ->orWhere('requisito_monedas', '<=', $estadisticas->monedas)
-                ->orWhere('requisito_trofeos', '<=', $estadisticas->trofeos))
-            ->update(['bloqueado' => false]);
+        $this->juegoSeleccionado->racha_actual = $usuarioJuego->racha_actual;
+        $this->juegoSeleccionado->racha_maxima = $usuarioJuego->racha_maxima;
+        $this->juegoSeleccionado->dias_jugados = $usuarioJuego->dias_jugados;
 
+        $this->juegoSeleccionado->logros_obtenidos = $user->logros()
+            ->wherePivot('juego_id', $this->juegoSeleccionado->id)
+            ->get();
+    });
 
-        if ($puntajeObtenido >= 18) {
-            $this->mensajeFinal = "¡Excelente! Has completado el juego con {$puntajeObtenido} puntos. 🎉 ademas recuerda que los puntos que vas ganando te acercan a nuevas recompensas. Tambien podras desbloquear otros juegos";
-        } elseif ($puntajeObtenido >= 14) {
-            $this->mensajeFinal = "¡Has completado el juego con {$puntajeObtenido} puntos ! 🎉 ademas recuerda que los puntos que vas ganando te acercan a nuevas recompensas. Tambien podras desbloquear otros juegos";
-        } elseif ($puntajeObtenido >= 10) {
-            $this->mensajeFinal = "Has terminado el juego con {$puntajeObtenido} puntos. ¡Puedes mejorar! 💪 ademas recuerda que los puntos que vas ganando te acercan a nuevas recompensas. Tambien podras desbloquear otros juegos";
-        } elseif ($puntajeObtenido >= 6) {
-            $this->mensajeFinal = "Has terminado el juego con {$puntajeObtenido} puntos. ¡Sigue intentándolo! 😊 ademas recuerda que los puntos que vas ganando te acercan a nuevas recompensas. Tambien podras desbloquear otros juegos";
-        } else {
-            $this->mensajeFinal = "Has terminado el juego con {$puntajeObtenido} puntos. ¡No te rindas! 🚀";
-        }
+    // 🔹 Mensaje final enriquecido
+    $logrosObtenidos = $this->juegoSeleccionado->logros_obtenidos->pluck('nombre')->toArray();
+    $recompensasObtenidas = Recompensa::where('puntos_requeridos', '<=', $puntajeObtenido)->pluck('descripcion')->toArray();
 
-        $this->modalAbierto = false;
-        session()->flash('create', "¡Partida finalizada! {$this->mensajeFinal}");
+    // Mensaje base según puntaje
+    if ($puntajeObtenido >= 18) {
+        $mensajeBase = "¡Excelente! Has completado el juego con {$puntajeObtenido} puntos. 🎉";
+    } elseif ($puntajeObtenido >= 14) {
+        $mensajeBase = "¡Muy bien! Has completado el juego con {$puntajeObtenido} puntos. 🎉";
+    } elseif ($puntajeObtenido >= 10) {
+        $mensajeBase = "Terminaste el juego con {$puntajeObtenido} puntos. ¡Puedes mejorar! 💪";
+    } elseif ($puntajeObtenido >= 6) {
+        $mensajeBase = "Terminaste el juego con {$puntajeObtenido} puntos. ¡Sigue intentándolo! 😊";
+    } else {
+        $mensajeBase = "Has terminado el juego con {$puntajeObtenido} puntos. ¡No te rindas! 🚀";
     }
+
+    $mensajeRacha = "Tu racha actual es de {$this->juegoSeleccionado->racha_actual} días, y tu racha máxima es {$this->juegoSeleccionado->racha_maxima} días.";
+    $mensajeLogros = $logrosObtenidos ? "🎖️ Logros obtenidos: " . implode(', ', $logrosObtenidos) . "." : "";
+    $mensajeRecompensas = $recompensasObtenidas ? "🎁 Recompensas desbloqueadas: " . implode(', ', $recompensasObtenidas) . "." : "";
+    $mensajeEstadisticas = "Ahora tienes {$this->monedas} monedas y {$this->trofeos} trofeos en total.";
+
+    $this->mensajeFinal = implode(" ", array_filter([$mensajeBase, $mensajeRacha, $mensajeLogros, $mensajeRecompensas, $mensajeEstadisticas]));
+
+    $this->modalAbierto = false;
+    session()->flash('create', "¡Partida finalizada! {$this->mensajeFinal}");
+
+    // 🔹 Resetear solo lo necesario
+    $this->reset('preguntas', 'indicePregunta', 'puntajeActual', 'mensajeMotivador', 'pistaIA', 'explicacionIA', 'respuestaCorrecta');
+}
+
+
+
 
     public function cerrarModal()
     {
         $this->modalAbierto = false;
+        $this->reset('juegoSeleccionado', 'preguntas', 'indicePregunta', 'puntajeActual', 'mensajeMotivador', 'pistaIA', 'explicacionIA', 'respuestaCorrecta', 'mensajeFinal');
     }
 
     public function reaccionar($juegoId, $tipo)

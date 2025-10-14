@@ -43,4 +43,10 @@ class Matricula extends Model
         return $this->belongsTo(User::class, 'docente_id');
     }
 
+    public function grado()
+{
+    return $this->belongsTo(Grado::class, 'grado_id');
+}
+
+
 }

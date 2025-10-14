@@ -29,6 +29,11 @@ class DatabaseSeeder extends Seeder
         $this->call(SeederTercerNivel::class);
         $this->call(SeederCuartoNivel::class);
         $this->call(SeederQuintoNivel::class);
+        $this->call(RecompensaSeeder::class);
+        $this->call(SeederJuegosBloqueadosNivel3::class);
+        $this->call(SeederLogros::class);
+
+
 
 
 

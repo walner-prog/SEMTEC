@@ -7,7 +7,7 @@ use Livewire\Component;
 class AdministradorDashboard extends Component
 {
 
-      public $tab = 'panel'; 
+     public $tab = 'escuela';
 
     protected $queryString = ['tab']; 
 

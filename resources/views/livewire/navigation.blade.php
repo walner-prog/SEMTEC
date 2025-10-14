@@ -63,8 +63,8 @@
 
                                 <x-dropdown-link :href="route('usuarios')">{{ __('Usuarios') }}</x-dropdown-link>
                                 <x-dropdown-link :href="route('roles')">{{ __('Roles') }}</x-dropdown-link>
-                                <x-dropdown-link :href="route('configuraciones.index')">{{ __('Configuraciones') }}
-                                </x-dropdown-link>
+
+
                             </x-slot>
                         </x-dropdown>
                         @endrole
@@ -79,15 +79,25 @@
                             <button
                                 class="inline-flex items-center px-3 py-2 border border-transparent rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all focus:outline-none">
 
-                                @if(Auth::user()->profile_photo_path)
-                                <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
+                                @php
+                                $foto = Auth::user()->profile_photo_path;
+                                @endphp
+
+                                @if($foto)
+                                @if(Str::startsWith($foto, ['http://', 'https://']))
+                                <img src="{{ $foto }}"
                                     class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                                @else
+                                <img src="{{ asset('storage/' . $foto) }}"
+                                    class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                                @endif
                                 @else
                                 <div
                                     class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm">
                                     <i class="fas fa-user text-gray-500 text-lg"></i>
                                 </div>
                                 @endif
+
 
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4 text-gray-600 dark:text-gray-300"
@@ -111,6 +121,10 @@
                                     🌙 {{ __('Modo Oscuro') }}
                                 </button>
                             </div>
+
+                            <x-dropdown-link :href="route('perfil')">
+                                {{ __('Mi Perfil') }}
+                            </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -160,7 +174,7 @@
 
         <!-- Menú móvil -->
         <div class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 z-50 md:hidden
-        {{ $open ? 'translate-x-0 ease-out' : '-translate-x-full ease-in' }}">
+         {{ $open ? 'translate-x-0 ease-out' : '-translate-x-full ease-in' }}">
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     <i class="fa-solid fa-house mr-1"></i> {{ __('Hogar') }}
@@ -196,19 +210,26 @@
                 <x-responsive-nav-link :href="route('roles')" :active="request()->routeIs('roles')">
                     <i class="fa-solid fa-user-lock"></i> {{ __('Roles') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('configuraciones.index')"
-                    :active="request()->routeIs('configuraciones.index')">
-                    <i class="fa-solid fa-cog"></i> {{ __('Configuraciones') }}
-                </x-responsive-nav-link>
+
                 @endrole
             </div>
             <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-700">
                 @auth
                 <div class="px-4 flex items-center space-x-3">
-                    @if(Auth::user()->profile_photo_path)
-                    <img src="{{ asset('storage/' . Auth::user()->profile_photo_path) }}"
+                    @php
+                    $foto = Auth::user()->profile_photo_path;
+                    @endphp
+
+                    @if($foto)
+                    @if(Str::startsWith($foto, ['http://', 'https://']))
+                    <img src="{{ $foto }}"
                         class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
                     @else
+                    <img src="{{ asset('storage/' . $foto) }}"
+                        class="h-10 w-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 shadow-sm">
+                    @endif
+                    @else
+
                     <div
                         class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 dark:border-gray-600 shadow-sm">
                         <i class="fas fa-user text-gray-500 text-lg"></i>
@@ -220,6 +241,12 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
+
+                    <x-dropdown-link :href="route('perfil')">
+                        {{ __('Mi Perfil') }}
+                    </x-dropdown-link>
+
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <x-responsive-nav-link :href="route('logout')"
@@ -245,7 +272,7 @@
                         <i class="fas fa-sign-in-alt"></i> Iniciar sesión
                     </a>
 
-                   
+
                 </div>
                 @endguest
             </div>

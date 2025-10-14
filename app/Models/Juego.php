@@ -11,7 +11,7 @@ class Juego extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'nombre', 'descripcion', 'icono', 'puntos_base', 'tipo','bloqueado', 'requisito_puntos', 'requisito_monedas', 'requisito_trofeos', 'nivel'
+        'nombre', 'descripcion', 'icono', 'puntos_base', 'tipo','bloqueado', 'requisito_puntos', 'requisito_monedas', 'requisito_trofeos', 'nivel', 'categoria'
     ];
 
     public function usuarios()

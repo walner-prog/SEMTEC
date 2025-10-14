@@ -10,6 +10,10 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DocenteContenido;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PerfilController;
+
+
+
   
 use Illuminate\Support\Facades\Artisan;
 
@@ -81,7 +85,7 @@ Route::middleware('auth')->group(function () {
 
 
         Route::get('/configuraciones', [ConfiguracionController::class, 'index'])->name('configuraciones.index');
-
+  
       
 
         // Perfil
@@ -101,6 +105,7 @@ Route::get('/juegos', [PageController::class, 'juegos'])->name('juegos.index');
 Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
 Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
 Route::get('/ia', [PageController::class, 'ia'])->name('ia');
+      Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
 
 
 

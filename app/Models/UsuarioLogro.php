@@ -12,6 +12,6 @@ class UsuarioLogro extends Model
     protected $table = 'usuario_logro';
 
     protected $fillable = [
-        'user_id', 'logro_id', 'fecha_obtenido'
+        'user_id', 'logro_id', 'fecha_obtenido', 'juego_id'
     ];
 }

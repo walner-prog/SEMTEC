@@ -11,12 +11,12 @@ class SeederPrimerNivel extends Seeder
     public function run(): void
     {
         $juegosPrimerGrado = [
-            ["Suma Básica", "fa-plus", "Aprende a sumar números pequeños.", 1],
-            ["Resta Básica", "fa-minus", "Aprende a restar números pequeños.", 1],
-            ["Contar Objetos", "fa-list-ol", "Reconoce y cuenta objetos simples.", 1],
-            ["Formas y Figuras", "fa-shapes", "Identifica figuras geométricas básicas.", 1],
-            ["Colores", "fa-paint-brush", "Reconoce y nombra colores básicos.", 1],
-            ["Animales", "fa-dog", "Identifica animales comunes.", 1]
+            ["Suma Básica", "fa-plus", "Aprende a sumar números pequeños.", 1, "Matemáticas"],
+            ["Resta Básica", "fa-minus", "Aprende a restar números pequeños.", 1, "Matemáticas"],
+            ["Contar Objetos", "fa-list-ol", "Reconoce y cuenta objetos simples.", 1, "Matemáticas"],
+            ["Formas y Figuras", "fa-shapes", "Identifica figuras geométricas básicas.", 1, "Matemáticas"],
+            ["Colores", "fa-paint-brush", "Reconoce y nombra colores básicos.", 1, "Arte/Colores"],
+            ["Animales", "fa-dog", "Identifica animales comunes.", 1, "Ciencias/Naturaleza"]
         ];
 
         // Crear juegos
@@ -29,9 +29,10 @@ class SeederPrimerNivel extends Seeder
                 'tipo' => 'quiz',
                 'bloqueado' => false,
                 'nivel' => $j[3],
+                'categoria' => $j[4], // ← agregamos categoría
             ]);
 
-            // Crear preguntas sencillas
+            // Crear preguntas según juego
             $preguntas = [];
 
             switch ($j[0]) {
@@ -73,8 +74,9 @@ class SeederPrimerNivel extends Seeder
                         ["¿Cuál tiene 3 lados?", ["⚪", "🔺", "⬛", "⬜"], "🔺"],
                         ["¿Cuál tiene 4 lados?", ["⚪", "🔺", "⬛", "⬜"], "⬛"],
                     ];
+                    break;
 
-                 case "Colores":
+                case "Colores":
                     $preguntas = [
                         ["¿De qué color es el cielo?", ["Rojo", "Azul", "Verde", "Amarillo"], "Azul"],
                         ["¿De qué color es una manzana?", ["Azul", "Verde", "Rojo", "Amarillo"], "Rojo"],
@@ -82,8 +84,9 @@ class SeederPrimerNivel extends Seeder
                         ["¿De qué color es el sol?", ["Rojo", "Azul", "Verde", "Amarillo"], "Amarillo"],
                         ["¿De qué color es una naranja?", ["Naranja", "Azul", "Verde", "Rojo"], "Naranja"],
                     ];
+                    break;
 
-                    case "Animales":
+                case "Animales":
                     $preguntas = [
                         ["¿Cuál es un perro?", ["🐶", "🐱", "🐰", "🐹"], "🐶"],
                         ["¿Cuál es un gato?", ["🐶", "🐱", "🐰", "🐹"], "🐱"],
@@ -98,7 +101,6 @@ class SeederPrimerNivel extends Seeder
                 Pregunta::create([
                     'juego_id' => $juego->id,
                     'enunciado' => $p[0],
-
                     'opciones' => json_encode($p[1]),
                     'respuesta_correcta' => $p[2],
                 ]);

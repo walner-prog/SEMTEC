@@ -15,16 +15,6 @@
 
             
 
-            <button wire:click="setTab('seguimiento')" 
-                class="flex items-center gap-2 px-4 py-2 transition-all duration-300 rounded-t-lg 
-                       {{ $tab === 'seguimiento' 
-                           ? 'border-b-2 border-blue-500 font-bold text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800 shadow-md' 
-                           : 'text-gray-600 dark:text-gray-300 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
-                <i class="fas fa-tasks"></i> Seguimiento
-            </button>
-
-        
- 
         </div>
     </div>
 

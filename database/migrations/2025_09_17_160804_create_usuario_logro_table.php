@@ -15,6 +15,7 @@ return new class extends Migration
     $table->id();
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->foreignId('logro_id')->constrained()->onDelete('cascade');
+    $table->foreignId('juego_id')->constrained()->onDelete('cascade');
     $table->timestamp('fecha_obtenido')->useCurrent();
     $table->timestamps();
 
