@@ -11,6 +11,15 @@ use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DocenteContenido;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\CursoController;
+use App\Models\Curso;
+
+Route::get('/curso/{curso}', function(Curso $curso) {
+    return view('cursos.ver', compact('curso'));
+})->name('curso.ver');
+
+
+
 
 
 
@@ -105,7 +114,8 @@ Route::get('/juegos', [PageController::class, 'juegos'])->name('juegos.index');
 Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
 Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
 Route::get('/ia', [PageController::class, 'ia'])->name('ia');
-      Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
+Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
+Route::get('/cursos', [CursoController::class, 'index'])->name('cursos');
 
 
 

@@ -126,6 +126,12 @@ public function tutor()
 }
 
 
+public function cursos()
+{
+    return $this->hasMany(Curso::class, 'user_id');
+}
+
+
  
 
 public function getProfilePhotoUrlAttribute(): string

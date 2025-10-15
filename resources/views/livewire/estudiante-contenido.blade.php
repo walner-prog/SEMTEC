@@ -366,7 +366,7 @@
                     <p class="mb-3 text-xl">❌ Incorrectas: <span class="font-bold text-red-600 dark:text-red-400">{{
                             $respuestasIncorrectas }}</span></p>
                     <p class="mb-5 text-xl">📊 Puntaje: <span class="font-bold text-blue-700 dark:text-blue-400">{{
-                            $puntajeFinal }} / {{ count($items) }}</span></p>
+                            $puntajeFinal }}  </span></p>
                 </div>
 
                 <!-- Botón cerrar -->

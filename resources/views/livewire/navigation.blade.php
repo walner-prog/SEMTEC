@@ -22,6 +22,8 @@
                             <i class="fas fa-gamepad mr-1"></i> {{ __('Juegos') }}
                         </x-nav-link>
 
+                       
+
                         <x-nav-link class="dark:text-gray-300" :href="route('ia')" :active="request()->routeIs('ia')">
                             <i class="fas fa-robot mr-1"></i> {{ __('Inteligencia Artificial') }}
                         </x-nav-link>
@@ -185,6 +187,8 @@
                 <x-responsive-nav-link :href="route('juegos.index')" :active="request()->routeIs('juegos')">
                     <i class="fa-solid fa-gamepad mr-1"></i> {{ __('Juegos') }}
                 </x-responsive-nav-link>
+
+                
 
                 <x-responsive-nav-link :href="route('ia')" :active="request()->routeIs('ia')">
                     <i class="fas fa-robot mr-1"></i> {{ __('Inteligencia Artificial') }}
