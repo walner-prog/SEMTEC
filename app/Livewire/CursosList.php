@@ -16,26 +16,25 @@ class CursosList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    // Campos del formulario del curso
+   
     public $titulo;
     public $descripcion;
     public $categoria = 'Inclusión';
     public $publicado = false;
     public $curso_id = null;
 
-    // Campos de lecciones (subformulario dinámico)
+    
     public $lecciones = [
         ['titulo' => '', 'descripcion' => '', 'youtube_url' => '', 'orden' => 1]
     ];
 
-    // Estados del modal y búsqueda
+   
     public $isOpen = false;
     public $modo = 'crear';
     public $search = '';
     public $modalConfirmar = false;
     public $cursoIdAEliminar = null;
-
-    // 🔹 Reglas de validación
+ 
     protected $rules = [
         'titulo' => 'required|string|min:3|max:150',
         'descripcion' => 'nullable|string|max:1000',
@@ -68,7 +67,7 @@ class CursosList extends Component
         $this->categoria = $curso->categoria;
         $this->publicado = $curso->publicado;
 
-        // Cargar lecciones existentes
+        
         $this->lecciones = $curso->lecciones->map(function ($l) {
             return [
                 'titulo' => $l->titulo,
@@ -106,7 +105,7 @@ class CursosList extends Component
                 'publicado' => $this->publicado,
             ]);
 
-            // Guardar las lecciones
+            
             foreach ($this->lecciones as $leccion) {
                 $curso->lecciones()->create($leccion);
             }
@@ -121,7 +120,7 @@ class CursosList extends Component
                 'publicado' => $this->publicado,
             ]);
 
-            // Eliminar y volver a crear las lecciones (más simple)
+             
             $curso->lecciones()->delete();
             foreach ($this->lecciones as $leccion) {
                 $curso->lecciones()->create($leccion);
@@ -160,22 +159,22 @@ class CursosList extends Component
 
   public function render()
 {
-    $userId = auth()->id(); // id del usuario logueado
+    $userId = auth()->id();  
 
-    // 1️⃣ Cursos creados por el usuario
+    
     $misCursos = Curso::query()
         ->with('docente')
         ->where('user_id', $userId)
         ->where('titulo', 'like', "%{$this->search}%")
         ->latest()
-        ->paginate(124, ['*'], 'misCursosPage'); // paginación separada
+        ->paginate(124, ['*'], 'misCursosPage');  
 
-    // 2️⃣ Todos los cursos publicados
+     
     $cursosPublicados = Curso::query()
         ->with('docente')
         ->where('publicado', true)
         ->latest()
-        ->paginate(124, ['*'], 'publicadosPage'); // paginación separada
+        ->paginate(124, ['*'], 'publicadosPage');  
 
     return view('livewire.cursos-list', compact('misCursos', 'cursosPublicados'));
 }

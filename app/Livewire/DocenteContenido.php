@@ -22,16 +22,13 @@ class DocenteContenido extends Component
     public $isOpen = false;
     public $modo = 'crear';
     public $grados = [];
-    // public $unidades = [];
     public ?Unidad $unidadSeleccionada = null;
-    // Para manejar la confirmación de eliminación
     public $isDeleteModalOpen = false;
     public ?Unidad $unidadAEliminar = null;
     use WithPagination;
-
     public $search = '';
     public $grado_id = '';
-    public $perPage = 5;
+    public $perPage = 100;
 
 
 
@@ -47,7 +44,7 @@ class DocenteContenido extends Component
         'actividades' => [],
     ];
 
-    // Método para abrir el modal de ver
+
     public function abrirModalVer(Unidad $unidad)
     {
         $this->isViewOpen = true;
@@ -57,7 +54,7 @@ class DocenteContenido extends Component
         $this->formVer = $contenidoForm->cargarParaEditar($unidad);
     }
 
-    // Método para cerrar
+
     public function cerrarModalVer()
     {
         $this->isViewOpen = false;
@@ -74,8 +71,6 @@ class DocenteContenido extends Component
     public function mount()
     {
         $this->grados = Grado::orderBy('orden')->get(['id', 'nombre']);
-
-        //  $this->cargarUnidades();
     }
 
     public function updatingSearch()
@@ -90,7 +85,7 @@ class DocenteContenido extends Component
 
     public function cargarUnidades()
     {
-        //$this->unidades = Unidad::with('competencias')->orderBy('orden')->get();
+        $this->resetPage();
     }
 
     public function abrirModal()
@@ -125,7 +120,6 @@ class DocenteContenido extends Component
             $contenidoForm->guardar($this->form);
             $this->isOpen = false;
             session()->flash('create', 'Contenido creado con éxito 🎉');
-            // $this->cargarUnidades();
         } catch (ValidationException $e) {
             $this->setErrorBag($e->errors());
         } catch (\Exception $e) {
@@ -141,7 +135,6 @@ class DocenteContenido extends Component
             $contenidoForm->actualizar($this->unidadSeleccionada, $this->form);
             $this->isOpen = false;
             session()->flash('update', 'Unidad actualizada con éxito 🎉');
-            //   $this->cargarUnidades();
         } catch (ValidationException $e) {
             $this->setErrorBag($e->errors());
         } catch (\Exception $e) {
@@ -149,14 +142,14 @@ class DocenteContenido extends Component
         }
     }
 
-    // Abrir modal y asignar unidad a eliminar
+
     public function abrirModalEliminar(Unidad $unidad)
     {
         $this->unidadAEliminar = $unidad;
         $this->isDeleteModalOpen = true;
     }
 
-    // Cerrar modal sin eliminar
+
     public function cerrarModalEliminar()
     {
         $this->unidadAEliminar = null;
@@ -175,7 +168,7 @@ class DocenteContenido extends Component
     }
 
 
-    // -------- Adders dinámicos ----------
+
     public function addCompetencia()
     {
         $this->form['competencias'][] = ['temp_id' => uniqid(), 'titulo' => '', 'descripcion' => '', 'orden' => count($this->form['competencias']) + 1];
@@ -193,7 +186,7 @@ class DocenteContenido extends Component
         $this->form['actividades'][$indTempId][$actIndex]['items'][] = ['enunciado' => '', 'orden' => count($this->form['actividades'][$indTempId][$actIndex]['items']) + 1];
     }
 
-    // -------- Removers usando ContenidoForm ----------
+
     public function removeCompetencia($index)
     {
         $contenidoForm = new ContenidoForm();
@@ -221,7 +214,7 @@ class DocenteContenido extends Component
     public function render()
     {
         $query = Unidad::with('grado')
-            ->where('docente_id', auth()->id()) // 🔒 Solo unidades del docente
+            ->where('docente_id', auth()->id())  
             ->orderBy('orden');
 
         if ($this->search) {

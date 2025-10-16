@@ -14,7 +14,7 @@ class UsuariosList extends Component
 
     public UsuarioForm $form;
     public $isOpen = false;
-    public $modo = 'crear'; 
+    public $modo = 'crear';
     public $search = '';
     public $verModal = false;
     public $usuarioVer = null;
@@ -24,7 +24,7 @@ class UsuariosList extends Component
     public $searchTutor = '';
     public $tutores = [];
     protected $paginationTheme = 'tailwind';
-    
+
     public function updatingSearch()
 
     {
@@ -46,15 +46,15 @@ class UsuariosList extends Component
 
 
     public function updatedSearchTutor()
-{
-    $this->tutores = \App\Models\User::role('Tutor')
-        ->where(function ($q) {
-            $q->where('name', 'like', '%' . $this->searchTutor . '%')
-              ->orWhere('username', 'like', '%' . $this->searchTutor . '%');
-        })
-        ->limit(10)
-        ->get();
-}
+    {
+        $this->tutores = \App\Models\User::role('Tutor')
+            ->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->searchTutor . '%')
+                    ->orWhere('username', 'like', '%' . $this->searchTutor . '%');
+            })
+            ->limit(10)
+            ->get();
+    }
 
 
     // -------------------------------
@@ -71,7 +71,7 @@ class UsuariosList extends Component
                 'error',
                 "Ya alcanzaste el límite máximo de usuarios permitidos ({$totalUsuarios}/{$limite})."
             );
-            return; 
+            return;
         }
 
         $this->resetForm();
@@ -121,7 +121,7 @@ class UsuariosList extends Component
         $this->resetForm();
         $this->isOpen = false;
     }
- 
+
     // -------------------------------
     //  Eliminar
     // -------------------------------
@@ -130,7 +130,6 @@ class UsuariosList extends Component
         $this->usuarioIdAEliminar = $id;
         $this->modalConfirmar = true;
         $this->closeMenu();
-       
     }
 
     public function eliminarConfirmado()
@@ -160,10 +159,9 @@ class UsuariosList extends Component
     {
         $this->form->reset();
         $this->form->usuario = null;
-        
     }
 
-   
+
     //  Ver Detalles
     // -------------------------------
     public function abrirModalVer($id)

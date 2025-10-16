@@ -67,7 +67,7 @@ class TutorPanel extends Component
         } else {
             $this->hijos = collect();
         }
-         $this->notificaciones = $user->notifications()->latest()->get();
+        $this->notificaciones = $user->notifications()->latest()->get();
     }
 
     public function enviarNotificacionDocente()
@@ -83,14 +83,12 @@ class TutorPanel extends Component
             $matricula = $hijo->matriculas()->with('docente')->first();
             if ($matricula && $matricula->docente) {
                 $docente = $matricula->docente;
-            $docente->notify(new NotificacionTutorDocente([
-    'titulo' => "Mensaje del tutor",
-    'mensaje' => $this->mensaje,
-    
-    'tutor_id' => $tutor->id,
-]));
+                $docente->notify(new NotificacionTutorDocente([
+                    'titulo' => "Mensaje del tutor",
+                    'mensaje' => $this->mensaje,
 
-
+                    'tutor_id' => $tutor->id,
+                ]));
             }
         }
 
@@ -98,15 +96,15 @@ class TutorPanel extends Component
         $this->dispatch('alerta', '✅ Mensaje enviado al docente.');
     }
 
-   public function marcarLeida($id)
-{
-    $notificacion = auth()->user()->notifications()->find($id);
-    if ($notificacion) {
-        $notificacion->markAsRead();
-        // Refrescar notificaciones
-        $this->notificaciones = auth()->user()->notifications()->latest()->get();
+    public function marcarLeida($id)
+    {
+        $notificacion = auth()->user()->notifications()->find($id);
+        if ($notificacion) {
+            $notificacion->markAsRead();
+            // Refrescar notificaciones
+            $this->notificaciones = auth()->user()->notifications()->latest()->get();
+        }
     }
-}
 
 
 

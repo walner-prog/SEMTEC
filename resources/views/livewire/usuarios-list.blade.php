@@ -2,7 +2,7 @@
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Gestión de Usuarios</h2>
 
-    <!-- Solo visible en escritorio -->
+   
     <div class="hidden lg:flex justify-between items-center gap-4">
         <button wire:click="abrirModalCrear"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
@@ -11,8 +11,7 @@
         <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email..." class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-full sm:w-1/3 
                dark:bg-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400">
     </div>
-
-    <!-- Solo visible en móvil/tablet -->
+ 
     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 lg:hidden">
         <button wire:click="abrirModalCrear"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
@@ -23,34 +22,26 @@
     </div>
 
 
-    {{-- Notificaciones --}}
-    @if (session()->has('create'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-        class="session-message bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 p-3 mt-4 rounded-lg shadow-md">
-        {{ session('create') }}
+ 
+     <div class="fixed top-5 right-5 space-y-2 z-50">
+        @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $type => $color)
+        @if (session()->has($type))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+            x-transition:enter="transform ease-out duration-300"
+            x-transition:enter-start="translate-y-[-20px] opacity-0" x-transition:enter-end="translate-y-0 opacity-100"
+            x-transition:leave="transform ease-in duration-300" x-transition:leave-start="translate-y-0 opacity-100"
+            x-transition:leave-end="translate-y-[-20px] opacity-0"
+            class="max-w-xs w-full border-l-4 border-{{ $color }}-500 bg-{{ $color }}-100 dark:bg-{{ $color }}-900 dark:text-{{ $color }}-200 p-4 rounded shadow-md flex items-start gap-2">
+            <i class="fas fa-info-circle text-{{ $color }}-600 mt-1"></i>
+            <div class="flex-1">
+                <span class="font-semibold capitalize">{{ $type }}:</span>
+                <span class="text-sm">{{ session($type) }}</span>
+            </div>
+            <button @click="show = false" class="text-gray-600 hover:text-gray-800">&times;</button>
+        </div>
+        @endif
+        @endforeach
     </div>
-    @endif
-
-    @if (session()->has('update'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-        class="session-message bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200 p-3 mt-4 rounded-lg shadow-md">
-        {{ session('update') }}
-    </div>
-    @endif
-
-    @if (session()->has('delete'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-        class="session-message bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
-        {{ session('delete') }}
-    </div>
-    @endif
-
-    @if (session()->has('error'))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-        class="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 p-3 mt-4 rounded-lg shadow-md">
-        {{ session('error') }}
-    </div>
-    @endif
 
 
     {{-- Tabla --}}
@@ -207,7 +198,7 @@
         </div>
     </div>
 
-    {{-- Modal Crear / Editar --}}
+  
     @if ($isOpen)
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
         <div
@@ -217,7 +208,7 @@
             </h2>
 
             <form wire:submit.prevent="guardar" class="space-y-4 mb-16">
-                {{-- Nombre --}}
+                
                 <div>
                     <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
                     <input type="text" wire:model="form.name"

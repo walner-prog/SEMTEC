@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'SemTec') }}</title>
     <link rel="shortcut icon" href="{{ asset('img/logo/logo.png') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/logo/apple-touch-icon.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo/logo.png') }}">
@@ -46,7 +46,7 @@
 </head>
 
 <body class="bg-[#FDFDFC] ">
-  <div class="min-h-screen dark:border-gray-700 pb-2 flex-nowrap w-full
+        <div class="min-h-screen dark:border-gray-700 pb-2 flex-nowrap w-full
             bg-gradient-to-r from-green-100 via-blue-100 to-purple-100 
             dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-t-xl shadow">
 

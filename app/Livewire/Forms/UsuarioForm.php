@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-
 use App\Models\Matricula;
 
 
@@ -40,17 +39,12 @@ class UsuarioForm extends Form
         $this->roles = Role::orderBy('name')->get();
     }
 
-
-
-
-
-
-    // Verifica si ya existe un usuario con rol Administrador antes de asignar ese rol a otro usuario
+    
     public function ComprobarSiYaExixteUsuarioAdministrador(): bool
     {
         $adminRole = Role::where('name', 'Administrador')->first();
         if (!$adminRole) {
-            return false; // No hay rol de administrador definido
+            return false;  
         }
 
         $adminUsersCount = User::role('Administrador')->count();
@@ -125,7 +119,7 @@ class UsuarioForm extends Form
         if ($this->role_id) {
             $roleName = Role::find($this->role_id)?->name;
             if ($roleName === 'Estudiante') {
-                $matricula = $usuario->matriculas()->latest()->first();  
+                $matricula = $usuario->matriculas()->latest()->first();
                 if ($matricula) {
                     $this->grado_id = $matricula->grado;
                     $this->seccion = $matricula->seccion;
@@ -133,7 +127,7 @@ class UsuarioForm extends Form
                 }
                 $this->tutor_id = $usuario->tutor_id;
 
-               
+
                 $this->accesibilidad = json_decode($usuario->preferencias_accesibilidad, true) ?? [];
             }
         }

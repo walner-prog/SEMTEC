@@ -22,7 +22,7 @@ class EstudiantesList extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    // Reset paginación al cambiar filtros
+  
     public function updating($field)
     {
         if (in_array($field, ['search', 'escuelaFilter', 'gradoFilter', 'anioFilter'])) {
@@ -34,18 +34,28 @@ class EstudiantesList extends Component
     {
         $matriculasQuery = Matricula::query()
             ->with(['estudiante', 'escuela', 'docente'])
-            ->when($this->search, fn($q) =>
-                $q->whereHas('estudiante', fn($q2) =>
+            ->when(
+                $this->search,
+                fn($q) =>
+                $q->whereHas(
+                    'estudiante',
+                    fn($q2) =>
                     $q2->where('name', 'like', "%{$this->search}%")
                 )
             )
-            ->when($this->escuelaFilter, fn($q) =>
+            ->when(
+                $this->escuelaFilter,
+                fn($q) =>
                 $q->where('escuela_id', $this->escuelaFilter)
             )
-            ->when($this->gradoFilter, fn($q) =>
+            ->when(
+                $this->gradoFilter,
+                fn($q) =>
                 $q->where('grado', $this->gradoFilter)
             )
-            ->when($this->anioFilter, fn($q) =>
+            ->when(
+                $this->anioFilter,
+                fn($q) =>
                 $q->where('anio', $this->anioFilter)
             )
             ->orderBy('fecha_matricula', 'desc');
@@ -55,7 +65,7 @@ class EstudiantesList extends Component
         $escuelas = Escuela::orderBy('nombre')->get();
         $grados = Grado::orderBy('nombre')->get();
 
-        // Obtener lista de años disponibles en la tabla
+      
         $anios = Matricula::select('anio')
             ->distinct()
             ->orderByDesc('anio')

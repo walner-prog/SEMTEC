@@ -52,7 +52,7 @@
                 {{ $modo === 'crear' ? 'Crear Contenido' : 'Editar Contenido' }}
             </h2>
 
-           
+
             {{-- Wizard pasos --}}
             <div class="mb-6 overflow-x-auto">
                 <div class="flex gap-2 flex-nowrap min-w-max">
@@ -330,12 +330,12 @@
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen rounded-2xl">
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {{-- 🔹 Sección principal (Gestión de Unidades) --}}
+            
 
 
             <div class="lg:col-span-9 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition">
                 <div class="block lg:hidden p-4 space-y-3">
-                    <!-- Filtros desplegables -->
+                    
                     <div x-data="{ open: false }" class="mb-3">
                         <button @click="open = !open"
                             class="w-full flex justify-between items-center px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg shadow">
@@ -345,11 +345,11 @@
                         <div x-show="open" x-transition
                             class="mt-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow space-y-3 border dark:border-gray-700">
 
-                            <!-- Buscador -->
+                           
                             <input type="text" wire:model.live="search" placeholder="🔍 Buscar por título..."
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
 
-                            <!-- Filtro por grado -->
+                            
                             <select wire:model.live="grado_id"
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
                                 <option value="">Todos los grados</option>
@@ -358,12 +358,12 @@
                                 @endforeach
                             </select>
 
-                            <!-- Per Page -->
+                          
                             <select wire:model.live="perPage"
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
-                                <option value="5">5 por página</option>
-                                <option value="10">10 por página</option>
-                                <option value="25">25 por página</option>
+                                <option value="100">100 por página</option>
+                                <option value="200">200 por página</option>
+                                <option value="300">300 por página</option>
                             </select>
 
                             <!-- Nuevo -->
@@ -452,9 +452,9 @@
                         </select>
                         <select wire:model.live="perPage"
                             class="border rounded-lg px-3 py-2 dark:bg-gray-700 dark:text-gray-200 text-sm">
-                            <option value="5">5 por página</option>
-                            <option value="10">10 por página</option>
-                            <option value="25">25 por página</option>
+                            <option value="100">100 por página</option>
+                            <option value="200">200 por página</option>
+                            <option value="300">300 por página</option>
                         </select>
                         <button wire:click="abrirModal"
                             class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow text-sm flex items-center gap-2">
@@ -516,7 +516,7 @@
                     </table>
                 </div>
 
-                <!-- Paginación y contador -->
+              
                 <div
                     class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="text-gray-600 dark:text-gray-300 text-sm">

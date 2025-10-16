@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 class ContenidoForm
 {
 
- 
+
 
     public function guardar(array $form)
     {
@@ -25,7 +25,7 @@ class ContenidoForm
                 $ultimoOrden = Unidad::where('grado_id', $form['unidad']['grado_id'])->max('orden');
                 $form['unidad']['orden'] = $ultimoOrden ? $ultimoOrden + 1 : 1;
             }
-            
+
             $form['unidad']['docente_id'] = auth()->id();
             $unidad = Unidad::create($form['unidad']);
 
@@ -225,7 +225,7 @@ class ContenidoForm
         }
     }
 
-    // ---------------- Cargar para editar ----------------
+  
     public function cargarParaEditar(Unidad $unidad)
     {
         $form = [
@@ -295,8 +295,7 @@ class ContenidoForm
 
         return $form;
     }
-
-    // ---------------- Validaciones internas ----------------
+ 
     protected function validarFormulario(array $form)
     {
         if (empty($form['unidad']['titulo'])) {
@@ -332,7 +331,7 @@ class ContenidoForm
         }
     }
 
-    // ---------------- Métodos remove dinámicos ----------------
+  
     public function removeCompetencia(array &$form, $index)
     {
         $comp = $form['competencias'][$index];

@@ -180,37 +180,37 @@ class EstudiantePanel extends Component
 
 
     private function calcularRetos()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    $totalSemana = $user->intentos()
-        ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-        ->count();
+        $totalSemana = $user->intentos()
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->count();
 
-    $matematicas = $user->intentos()
-        ->whereHas('actividad', fn($q) => $q->where('tipo', 'matematica'))
-        ->count();
+        $matematicas = $user->intentos()
+            ->whereHas('actividad', fn($q) => $q->where('tipo', 'matematica'))
+            ->count();
 
- 
 
-    $this->retos = [
-        [
-            'titulo' => 'Completar 5 actividades esta semana',
-            'icono' => 'fa-bolt text-red-500',
-            'fondo' => 'bg-red-50 dark:bg-gray-700',
-            'progreso' => $totalSemana,
-            'meta' => 5,
-        ],
-        [
-            'titulo' => 'Resolver 3 retos matemáticos',
-            'icono' => 'fa-brain text-purple-500',
-            'fondo' => 'bg-purple-50 dark:bg-gray-700',
-            'progreso' => $matematicas,
-            'meta' => 3,
-        ],
-         
-    ];
-}
+
+        $this->retos = [
+            [
+                'titulo' => 'Completar 5 actividades esta semana',
+                'icono' => 'fa-bolt text-red-500',
+                'fondo' => 'bg-red-50 dark:bg-gray-700',
+                'progreso' => $totalSemana,
+                'meta' => 5,
+            ],
+            [
+                'titulo' => 'Resolver 3 retos matemáticos',
+                'icono' => 'fa-brain text-purple-500',
+                'fondo' => 'bg-purple-50 dark:bg-gray-700',
+                'progreso' => $matematicas,
+                'meta' => 3,
+            ],
+
+        ];
+    }
 
     public function render()
     {

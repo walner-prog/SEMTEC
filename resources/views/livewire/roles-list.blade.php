@@ -51,16 +51,27 @@
 
 
 
-    {{-- Notificaciones --}}
-    @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $msg => $color)
-    @if (session()->has($msg))
-    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
-        class="session-message bg-{{ $color }}-100 text-{{ $color }}-800 dark:bg-{{ $color }}-900 dark:text-{{ $color }}-200 p-3 mt-4 rounded-lg shadow-md">
-        {{ session($msg) }}
+    <div class="fixed top-5 right-5 space-y-2 z-50">
+        @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $type => $color)
+        @if (session()->has($type))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+            x-transition:enter="transform ease-out duration-300"
+            x-transition:enter-start="translate-y-[-20px] opacity-0" x-transition:enter-end="translate-y-0 opacity-100"
+            x-transition:leave="transform ease-in duration-300" x-transition:leave-start="translate-y-0 opacity-100"
+            x-transition:leave-end="translate-y-[-20px] opacity-0"
+            class="max-w-xs w-full border-l-4 border-{{ $color }}-500 bg-{{ $color }}-100 dark:bg-{{ $color }}-900 dark:text-{{ $color }}-200 p-4 rounded shadow-md flex items-start gap-2">
+            <i class="fas fa-info-circle text-{{ $color }}-600 mt-1"></i>
+            <div class="flex-1">
+                <span class="font-semibold capitalize">{{ $type }}:</span>
+                <span class="text-sm">{{ session($type) }}</span>
+            </div>
+            <button @click="show = false" class="text-gray-600 hover:text-gray-800">&times;</button>
+        </div>
+        @endif
+        @endforeach
     </div>
-    @endif
-    @endforeach
 
+    
     {{-- Tabla para Escritorio --}}
     <div class="overflow-x-auto mt-6 hidden lg:block">
         <table class="w-full border-collapse rounded-lg overflow-hidden shadow-md">

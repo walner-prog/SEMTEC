@@ -3,7 +3,7 @@
         Actividades disponibles
     </h2>
 
-    <!-- Notificaciones -->
+ 
     <div class="fixed top-5 right-5 space-y-2 z-50">
         @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $type => $color)
         @if (session()->has($type))
@@ -24,11 +24,11 @@
         @endforeach
     </div>
 
-    <!-- Lista de actividades -->
+    
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
 
-        {{-- 🔹 Sección Actividades (col 10) --}}
+       
         <div class="lg:col-span-9">
             <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
                 <i class="fas fa-tasks text-blue-500"></i> Actividades Disponibles
@@ -57,14 +57,14 @@
         </div>
 
 
-        {{-- 🔹 Columna lateral (col 3) --}}
+     
         <div class="lg:col-span-3 flex flex-col gap-6">
 
             <h2 class="text-2xl font-bold  text-gray-800 dark:text-gray-100 flex items-center gap-2">
                 <i class="fas fa-tasks text-blue-500"></i> Mas Secciones
             </h2>
 
-            {{-- 📚 Aprende con IA --}}
+           
             <div
                 class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-bold mb-4 text-gray-700 dark:text-gray-200 flex items-center gap-2">
@@ -72,7 +72,7 @@
                 </h3>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">
                     Descubre cómo la inteligencia artificial puede personalizar tus estudios y ayudarte a mejorar en
-                    cada reto 🚀.
+                    cada reto .
                 </p>
                 <ul class="space-y-3">
                     <li class="flex items-center gap-2">
@@ -123,7 +123,7 @@
         </div>
 
 
-        {{-- 🌟 Progreso General (col 12 que aparece en medio) --}}
+        
         <div class="lg:col-span-12">
             <div
                 class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -164,7 +164,7 @@
 
     <div class="hidden md:block">
 
-        <!-- Modal Mejorado para Actividad -->
+     
         @if($mostrarModal && $actividadSeleccionada)
         <div x-data="{ open: true, showConfetti: false, darkMode: {{ $highContrast ? 'true' : 'false' }} }"
             x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -172,11 +172,10 @@
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
 
-            <!-- Modal -->
+          
             <div class="rounded-3xl  bg-gray-100  dark:bg-gray-900 shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-y-auto p-6 relative transition-colors duration-300"
                 style="font-size: {{ $fontSize }}px;">
-
-                <!-- Accesibilidad -->
+ 
                 @if($accesibilidad['isn'])
                 <div class="mb-4 flex justify-center items-center gap-3 flex-wrap text-lg">
                     <span class="font-semibold flex dark:text-gray-200 items-center gap-2"><i
@@ -609,7 +608,7 @@
 
 
 
-    <!-- CSS Confeti (Tailwind + custom) -->
+    
     <style>
         .confetti {
             position: absolute;

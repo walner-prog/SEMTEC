@@ -41,11 +41,11 @@ class EstudianteContenido extends Component
             ->whereHas('indicador.competencia.unidad.grado', function ($q) use ($user) {
                 $q->whereIn('id', $user->grados->pluck('id'));
             })
-            // Solo actividades que el estudiante aún no ha revisado
+           
             ->whereDoesntHave('intentos', function ($q) use ($user) {
-                $q->where('user_id', $user->id)       // solo sus intentos
+                $q->where('user_id', $user->id)        
                     ->whereHas('revision', function ($q2) {
-                        $q2->where('revisado', true);  // revisados
+                        $q2->where('revisado', true);  
                     });
             })
             ->get();
@@ -86,7 +86,7 @@ class EstudianteContenido extends Component
         if (!$item) return;
 
         $this->explicacionIA = $this->consultarIA("Explica de manera sencilla esta pregunta para estudiantes de primaria [6-12 años], 
-    sin revelar la respuesta correcta, con ejemplos simples y paso a paso si es matemáticas: {$item['enunciado']}");
+         sin revelar la respuesta correcta, con ejemplos simples y paso a paso si es matemáticas: {$item['enunciado']}");
     }
 
     private function consultarIA($input)
@@ -118,16 +118,16 @@ class EstudianteContenido extends Component
         $this->respuesta = null;
         $this->actividadFinalizada = false;
 
-        // Accesibilidad
+         
         $this->accesibilidad = json_decode($this->actividadSeleccionada->accesibilidad_flags, true) ?? $this->accesibilidad;
 
-        // Cronómetro
+        
         if ($this->actividadSeleccionada->tipo === 'cronometro' && $this->actividadSeleccionada->limite_tiempo) {
             $this->esCronometro = true;
             $this->tiempoRestante = $this->actividadSeleccionada->limite_tiempo * 60; // minutos → segundos
         }
 
-        // Crear intento
+        
         $intento = Intento::create([
             'actividad_id' => $this->actividadSeleccionada->id,
             'user_id' => Auth::id(),
@@ -148,7 +148,7 @@ class EstudianteContenido extends Component
         $intento = Intento::find($this->intentoId);
         $intento->item_id = $item['id'];
 
-        // Validar respuesta contra la correcta
+        
         if (isset($item['respuesta']) && $this->respuesta !== null) {
             if ($this->respuesta == $item['respuesta']) {
                 $intento->aciertos++;
@@ -160,12 +160,12 @@ class EstudianteContenido extends Component
         $intento->save();
 
         $this->respuesta = null;
-        $this->pistaIA = null;         // limpiar pista
+        $this->pistaIA = null;          
         $this->explicacionIA = null;
 
         $this->respuesta = null;
 
-        // Avanzar o finalizar
+        
         if ($this->itemIndex < count($this->items) - 1) {
             $this->itemIndex++;
         } else {
@@ -178,14 +178,14 @@ class EstudianteContenido extends Component
         $intento = Intento::find($this->intentoId);
         $intento->fin = now();
 
-        // Calcular puntaje porcentual
+       
         $total = $intento->aciertos + $intento->errores;
         if ($total > 0) {
             $intento->puntaje = round(($intento->aciertos / $total) * 100, 2);
         }
         $intento->save();
 
-        // Crear revisión automática
+        
         $docenteId = $this->actividadSeleccionada
             ->indicador
             ->competencia

@@ -22,17 +22,15 @@ class DocenteRevisionTareas extends Component
     public $competencia_id = '';
     public $indicador_id = '';
     public $actividad_id = '';
-    public $estado = 'pendientes'; // 'pendientes', 'revisados', 'todos'
+    public $estado = 'pendientes';  
 
-    // Para modal de retroalimentación
+   
     public $intentoSeleccionado;
     public $retroalimentacion = '';
     public $calificacion = '';
     public $mostrarModal = false;
 
-    // -----------------------------
-    // Propiedades computadas
-    // -----------------------------
+   
     public function getGradosProperty()
     {
         return Auth::user()->grados;
@@ -62,9 +60,7 @@ class DocenteRevisionTareas extends Component
         return Actividad::where('indicador_id', $this->indicador_id)->get();
     }
 
-    // -----------------------------
-    // Reset en cascada para filtros
-    // -----------------------------
+    
     public function updatedGradoId()
     {
         $this->reset(['unidad_id', 'competencia_id', 'indicador_id', 'actividad_id']);
@@ -85,16 +81,15 @@ class DocenteRevisionTareas extends Component
         $this->reset(['actividad_id']);
     }
 
-    // -----------------------------
-    // Query principal de intentos
-    // -----------------------------
+ 
+  
     public function getIntentosQuery()
     {
         $query = Intento::with(['usuario', 'actividad.indicador.competencia.unidad', 'revision'])
-            ->whereHas('actividad', function($query) {
-                $query->whereHas('indicador', function($query) {
-                    $query->whereHas('competencia', function($query) {
-                        $query->whereHas('unidad', function($query) {
+            ->whereHas('actividad', function ($query) {
+                $query->whereHas('indicador', function ($query) {
+                    $query->whereHas('competencia', function ($query) {
+                        $query->whereHas('unidad', function ($query) {
                             if ($this->grado_id) $query->where('grado_id', $this->grado_id);
                             if ($this->unidad_id) $query->where('id', $this->unidad_id);
                         });
@@ -105,14 +100,14 @@ class DocenteRevisionTareas extends Component
                 if ($this->actividad_id) $query->where('id', $this->actividad_id);
             });
 
-        // Filtrar por estado
+      
         if ($this->estado === 'pendientes') {
             $query->whereDoesntHave('revision')
-                  ->orWhereHas('revision', function($q) {
-                      $q->where('revisado', false);
-                  });
+                ->orWhereHas('revision', function ($q) {
+                    $q->where('revisado', false);
+                });
         } elseif ($this->estado === 'revisados') {
-            $query->whereHas('revision', function($q) {
+            $query->whereHas('revision', function ($q) {
                 $q->where('revisado', true);
             });
         }
@@ -127,9 +122,7 @@ class DocenteRevisionTareas extends Component
             ->paginate(300);
     }
 
-    // -----------------------------
-    // Modal y acciones
-    // -----------------------------
+   
     public function abrirModalRevision($intentoId)
     {
         $this->intentoSeleccionado = Intento::with(['usuario', 'actividad', 'revision'])->find($intentoId);
@@ -180,9 +173,7 @@ class DocenteRevisionTareas extends Component
         session()->flash('message', 'Tarea marcada como revisada.');
     }
 
-    // -----------------------------
-    // Render
-    // -----------------------------
+    
     public function render()
     {
         return view('livewire.docente-revision-tareas', [

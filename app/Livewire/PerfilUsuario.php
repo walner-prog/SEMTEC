@@ -7,7 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
- 
+
 
 class PerfilUsuario extends Component
 {
@@ -18,7 +18,7 @@ class PerfilUsuario extends Component
     public $modalOpen = false;
     public bool $isAdmin = false;
 
-    // Campos por rol
+    
     public $escuela, $grados = [], $grado, $seccion, $docente, $accesibilidad = [];
 
     public function mount()
@@ -32,26 +32,24 @@ class PerfilUsuario extends Component
         $this->profilePhotoTemp = $user->profile_photo_path;
         $this->isAdmin = $user->hasRole('Administrador');
 
-        // Mostrar datos adicionales según el rol
+        
         if ($user->hasRole('Docente')) {
-    $this->escuela = $user->escuela?->nombre;
-    $this->grados = $user->grados?->pluck('nombre')->toArray();
-}
+            $this->escuela = $user->escuela?->nombre;
+            $this->grados = $user->grados?->pluck('nombre')->toArray();
+        }
 
-if ($user->hasRole('Estudiante')) {
-    $matricula = $user->matriculas()
-        ->with(['escuela', 'docente']) // ya no necesitamos 'grado' como relación
-        ->latest()
-        ->first();
+        if ($user->hasRole('Estudiante')) {
+            $matricula = $user->matriculas()
+                ->with(['escuela', 'docente']) 
+                ->latest()
+                ->first();
 
-    $this->escuela = $matricula?->escuela?->nombre ?? '--';
-    $this->grado = $matricula?->grado ?? '--'; // <- aquí usamos directamente la columna 'grado'
-    $this->seccion = $matricula?->seccion ?? '--';
-    $this->docente = $matricula?->docente?->name ?? '--';
-    $this->accesibilidad = json_decode($user->preferencias_accesibilidad, true) ?? [];
-}
-
-
+            $this->escuela = $matricula?->escuela?->nombre ?? '--';
+            $this->grado = $matricula?->grado ?? '--';  
+            $this->seccion = $matricula?->seccion ?? '--';
+            $this->docente = $matricula?->docente?->name ?? '--';
+            $this->accesibilidad = json_decode($user->preferencias_accesibilidad, true) ?? [];
+        }
     }
 
     public function updatedProfilePhotoPath()
@@ -69,7 +67,7 @@ if ($user->hasRole('Estudiante')) {
             $this->profilePhotoTemp = $response->json('data.url');
             $this->profilePhotoDeleteTempUrl = $response->json('data.delete_url');
         } else {
-            session()->flash('error', '❌ No se pudo subir la foto.');
+            session()->flash('error', ' No se pudo subir la foto.');
         }
     }
 

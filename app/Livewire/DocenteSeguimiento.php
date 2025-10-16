@@ -22,9 +22,7 @@ class DocenteSeguimiento extends Component
     public $indicador_id = '';
     public $actividad_id = '';
 
-    // -----------------------------
-    // Propiedades computadas
-    // -----------------------------
+  
     public function getGradosProperty()
     {
         return Grado::whereHas('docentes', function($q) {
@@ -64,9 +62,7 @@ class DocenteSeguimiento extends Component
         return Actividad::where('indicador_id', $this->indicador_id)->get();
     }
 
-    // -----------------------------
-    // Resets en cascada
-    // -----------------------------
+   
     public function updatedGradoId()
     {
         $this->reset(['unidad_id', 'competencia_id', 'indicador_id', 'actividad_id']);
@@ -87,9 +83,7 @@ class DocenteSeguimiento extends Component
         $this->reset(['actividad_id']);
     }
 
-    // -----------------------------
-    // Query principal
-    // -----------------------------
+     
     public function getIntentosQuery()
     {
         $query = Intento::with(['usuario', 'actividad.indicador.competencia.unidad']);
@@ -134,9 +128,7 @@ class DocenteSeguimiento extends Component
             ->paginate(300);
     }
 
-    // -----------------------------
-    // Render
-    // -----------------------------
+   
     public function render()
     {
         return view('livewire.docente-seguimiento', [

@@ -9,14 +9,14 @@ use GuzzleHttp\Client;
 class InteraccionIA extends Component
 {
     public $modalAbierto = false;
-    public $modalSugerencias = false; // Controla el modal de sugerencias
+    public $modalSugerencias = false;  
     public $mensaje = '';
     public $respuestaIA = '';
     public $cargando = false;
 
     protected $listeners = ['abrirModalIA' => 'abrirModal'];
 
-    // Abrir modal principal de interacción
+    
     public function abrirModal($userId)
     {
         $this->modalAbierto = true;
@@ -31,7 +31,7 @@ class InteraccionIA extends Component
         $this->respuestaIA = '';
     }
 
-    // Abrir y cerrar modal de sugerencias
+   
     public function abrirModalSugerencias()
     {
         $this->modalSugerencias = true;
@@ -41,8 +41,7 @@ class InteraccionIA extends Component
     {
         $this->modalSugerencias = false;
     }
-
-    // Enviar mensaje a la IA
+ 
    public function enviarMensaje()
 {
     if (empty($this->mensaje)) return;
@@ -52,22 +51,22 @@ class InteraccionIA extends Component
     $user = Auth::user()->load('intentos.actividad', 'juegos');
     $nombre = $user->name;
 
-    // Actividades realizadas
+    
     $actividades = $user->intentos->map(fn($i) => $i->actividad?->nombre ?? 'Actividad sin nombre')->toArray();
     $actividadesStr = empty($actividades) 
         ? '<li>Ninguna</li>' 
         : implode('', array_map(fn($a) => "<li>$a</li>", $actividades));
 
-    // Juegos completados
+    
     $juegosCompletados = $user->juegos->filter(fn($j) => $j->pivot->completado)
         ->map(fn($j) => "<li>{$j->nombre} (puntaje: {$j->pivot->puntaje})</li>")->toArray();
     $juegosStr = empty($juegosCompletados) ? '<li>Ninguno</li>' : implode('', $juegosCompletados);
 
-    // Promedios
+   
     $promedioActividades = round($user->intentos->avg('puntaje') ?? 0, 2);
     $promedioJuegos = round($user->juegos->pluck('pivot.puntaje')->avg() ?? 0, 2);
 
-    // Contexto para la IA
+     
     $contexto = "
     <strong>Estudiante:</strong> $nombre
     <ul>
@@ -79,7 +78,7 @@ class InteraccionIA extends Component
     </ul>
     ";
 
-    // Reglas explícitas para reflejar la esencia inclusiva
+    
     $reglas = "Reglas para la IA:
 1. Responde usando lenguaje amigable, motivador y nicaragüense, nada técnico.
 2. Siempre llama al estudiante por su nombre: $nombre.
@@ -135,17 +134,15 @@ x → “por”
   
 
 
-    // Combinar contexto + reglas + mensaje del estudiante
+ 
     $input = "$reglas\n\n$contexto\n\nPregunta o recomendación del estudiante: " . $this->mensaje;
-
-    // Consultar IA
+ 
     $this->respuestaIA = $this->consultarIA($input);
 
     $this->cargando = false;
     $this->mensaje = '';
 }
-
-    // Función que consulta OpenAI
+ 
     private function consultarIA($input)
     {
         $client = new Client();

@@ -43,6 +43,8 @@
                             <i class="fas fa-envelope mr-1"></i> {{ __('Contacto') }}
                         </x-nav-link>
 
+                        
+
 
 
                         @role('Administrador')
@@ -205,6 +207,7 @@
                 <x-responsive-nav-link :href="route('contacto')" :active="request()->routeIs('contacto')">
                     <i class="fa-solid fa-envelope mr-1"></i> {{ __('Contacto') }}
                 </x-responsive-nav-link>
+ 
 
                 @role('Administrador')
 

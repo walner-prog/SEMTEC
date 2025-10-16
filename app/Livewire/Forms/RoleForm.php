@@ -6,13 +6,13 @@ use Livewire\Form;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
- 
+
 
 class RoleForm extends Form
 {
     public $name = '';
-    public $permissions = []; 
-    public $allPermissions = [];  
+    public $permissions = [];
+    public $allPermissions = [];
     public ?Role $role = null;
 
     public function mount()
@@ -28,7 +28,7 @@ class RoleForm extends Form
             'permissions.*' => ['exists:permissions,id'],
         ];
 
-     
+
         if (! $this->role || $this->role->name !== 'Administrador') {
             $rules['name'] = [
                 'required',
@@ -62,33 +62,32 @@ class RoleForm extends Form
 
 
 
-public function store()
-{
-    $this->validate();
-    $role = Role::create($this->payload());
+    public function store()
+    {
+        $this->validate();
+        $role = Role::create($this->payload());
 
-    if ($this->permissions) {
-        $perms = Permission::whereIn('id', $this->permissions)->pluck('name')->toArray();
-        $role->syncPermissions($perms);
+        if ($this->permissions) {
+            $perms = Permission::whereIn('id', $this->permissions)->pluck('name')->toArray();
+            $role->syncPermissions($perms);
+        }
     }
-}
 
-public function update()
-{
-    if (!$this->role) return;
- 
-    if ($this->role->name === 'Administrador') {
-        
+    public function update()
+    {
+        if (!$this->role) return;
+
+        if ($this->role->name === 'Administrador') {
+
+            $perms = Permission::whereIn('id', $this->permissions ?? [])->pluck('name')->toArray();
+            $this->role->syncPermissions($perms);
+            return;
+        }
+
+        $this->validate();
+        $this->role->update($this->payload());
+
         $perms = Permission::whereIn('id', $this->permissions ?? [])->pluck('name')->toArray();
         $this->role->syncPermissions($perms);
-        return;
     }
-
-    $this->validate();
-    $this->role->update($this->payload());
-
-    $perms = Permission::whereIn('id', $this->permissions ?? [])->pluck('name')->toArray();
-    $this->role->syncPermissions($perms);
-}
-
 }

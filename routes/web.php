@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 
 use Illuminate\Support\Facades\Route;
 
- 
+
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\ConfiguracionController;
@@ -12,30 +12,18 @@ use App\Http\Controllers\DocenteContenido;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CursoController;
-use App\Models\Curso;
-
-Route::get('/curso/{curso}', function(Curso $curso) {
-    return view('cursos.ver', compact('curso'));
-})->name('curso.ver');
-
-
-
-
-
-
-  
 use Illuminate\Support\Facades\Artisan;
 
-  
 
-Route::get('/generar_enlace_simbolico', function() {
+
+Route::get('/generar_enlace_simbolico', function () {
     Artisan::call('storage:link');
     return '¡Enlace simbólico creado!';
 });
 
 
- 
- 
+
+
 
 Route::get('/artisan/{command}', function ($command) {
     // ⚠️ Seguridad: key secreta
@@ -68,13 +56,13 @@ Route::get('/artisan/{command}', function ($command) {
 
 // Página de login
 Route::get('/login', function () {
-     // tu vista de login
+    // tu vista de login
 })->middleware('guest')->name('login');
 
 // Redirigir la raíz "/" según el estado de autenticación
 Route::get('/', function () {
-   // return redirect()->route(auth()->check() ? 'dashboard' : 'login');
-   return view('welcome');
+    // return redirect()->route(auth()->check() ? 'dashboard' : 'login');
+    return view('welcome');
 });
 
 // Dashboard
@@ -82,11 +70,18 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// ruta para vista de politicas de privacidad
+Route::view('/politicas-de-privacidad', 'politicas')->name('politicas');
+// ruta para vista de condiciones de uso
+Route::view('/condiciones-de-uso', 'condiciones')->name('condiciones');
+Route::view('/demo', 'demo-semtec')->name('demo-semtec');
+
+
 
 
 // Agrupamos todas las rutas protegidas
 Route::middleware('auth')->group(function () {
-   
+
     // Solo administradores
     Route::middleware('role:Administrador')->group(function () {
         Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios');
@@ -94,8 +89,8 @@ Route::middleware('auth')->group(function () {
 
 
         Route::get('/configuraciones', [ConfiguracionController::class, 'index'])->name('configuraciones.index');
-  
-      
+
+
 
         // Perfil
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -108,17 +103,14 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::get('/mision', [PageController::class, 'mision'])->name('mision');
-Route::get('/vision', [PageController::class, 'vision'])->name('vision');
-Route::get('/juegos', [PageController::class, 'juegos'])->name('juegos.index');
-Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
-Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
-Route::get('/ia', [PageController::class, 'ia'])->name('ia');
-Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
-Route::get('/cursos', [CursoController::class, 'index'])->name('cursos');
-
-
-
+    Route::get('/mision', [PageController::class, 'mision'])->name('mision');
+    Route::get('/vision', [PageController::class, 'vision'])->name('vision');
+    Route::get('/juegos', [PageController::class, 'juegos'])->name('juegos.index');
+    Route::get('/docente/contenido', [DocenteContenido::class, 'index'])->name('docente.contenido');
+    Route::get('/contacto', [PageController::class, 'contacto'])->name('contacto');
+    Route::get('/ia', [PageController::class, 'ia'])->name('ia');
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil');
+    Route::get('/cursos', [CursoController::class, 'index'])->name('cursos');
 });
 
 require __DIR__ . '/auth.php';
