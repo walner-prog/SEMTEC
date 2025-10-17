@@ -3,7 +3,7 @@
         Actividades disponibles
     </h2>
 
- 
+
     <div class="fixed top-5 right-5 space-y-2 z-50">
         @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $type => $color)
         @if (session()->has($type))
@@ -24,11 +24,11 @@
         @endforeach
     </div>
 
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
 
-       
+
         <div class="lg:col-span-9">
             <h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
                 <i class="fas fa-tasks text-blue-500"></i> Actividades Disponibles
@@ -57,14 +57,14 @@
         </div>
 
 
-     
+
         <div class="lg:col-span-3 flex flex-col gap-6">
 
             <h2 class="text-2xl font-bold  text-gray-800 dark:text-gray-100 flex items-center gap-2">
                 <i class="fas fa-tasks text-blue-500"></i> Mas Secciones
             </h2>
 
-           
+
             <div
                 class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-bold mb-4 text-gray-700 dark:text-gray-200 flex items-center gap-2">
@@ -99,7 +99,6 @@
 
             </div>
 
-            {{-- 📰 Noticias & Tips --}}
             <div
                 class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-bold mb-4 text-gray-700 dark:text-gray-200 flex items-center gap-2">
@@ -123,7 +122,7 @@
         </div>
 
 
-        
+
         <div class="lg:col-span-12">
             <div
                 class="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -164,7 +163,7 @@
 
     <div class="hidden md:block">
 
-     
+
         @if($mostrarModal && $actividadSeleccionada)
         <div x-data="{ open: true, showConfetti: false, darkMode: {{ $highContrast ? 'true' : 'false' }} }"
             x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
@@ -172,10 +171,10 @@
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
 
-          
+
             <div class="rounded-3xl  bg-gray-100  dark:bg-gray-900 shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-y-auto p-6 relative transition-colors duration-300"
                 style="font-size: {{ $fontSize }}px;">
- 
+
                 @if($accesibilidad['isn'])
                 <div class="mb-4 flex justify-center items-center gap-3 flex-wrap text-lg">
                     <span class="font-semibold flex dark:text-gray-200 items-center gap-2"><i
@@ -279,69 +278,118 @@
                 </div>
 
                 <!-- Pregunta -->
-                <div
-                    class="p-6 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 dark:text-gray-200 rounded-3xl shadow-xl text-center mb-6">
+                <div class="p-6 bg-gradient-to-r from-green-200 via-blue-200 to-green-300 
+           dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 
+           dark:text-gray-200 rounded-3xl shadow-xl text-center mb-6">
 
+                    {{-- 🔊 Botón de lectura en voz alta --}}
                     @if($accesibilidad['tts'])
-                    <button wire:click="leerEnunciado"
-                        class="px-5 py-2 bg-blue-500 text-white rounded-full mb-4 hover:bg-blue-600 transition shadow-md flex items-center gap-2">
+                    <button wire:click="leerEnunciado" class="px-5 py-2 bg-blue-500 text-white rounded-full mb-4 
+                   hover:bg-blue-600 transition shadow-md flex items-center gap-2 mx-auto">
                         <i class="fas fa-volume-up text-xl"></i> Escuchar
                     </button>
                     @endif
 
-                    <h4
-                        class="font-bold text-blue-700 dark:text-blue-400 mb-3 flex items-center justify-center gap-2 text-xl md:text-2xl">
-                        <i class="fas fa-question-circle text-2xl"></i> Pregunta {{ $itemIndex+1 }}
+                    {{-- 🧩 Título y pregunta --}}
+                    <h4 class="font-bold text-blue-700 dark:text-blue-400 mb-3 
+               flex items-center justify-center gap-2 text-xl md:text-2xl">
+                        <i class="fas fa-question-circle text-2xl"></i> Pregunta {{ $itemIndex + 1 }}
                     </h4>
 
-                    <p class="text-gray-800 dark:text-gray-200 mb-5 text-lg md:text-xl">{{
-                        $items[$itemIndex]['enunciado'] }}</p>
+                    <p class="text-gray-800 dark:text-gray-200 mb-5 text-lg md:text-xl leading-relaxed">
+                        {{ $items[$itemIndex]['enunciado'] }}
+                    </p>
 
-                    <!-- Botones ayuda IA -->
+                    {{-- 💡 Botones de ayuda IA --}}
                     <div class="flex justify-center gap-4 mb-5 flex-wrap">
-                        <button wire:click="generarPista"
-                            class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <button wire:click="generarPista" class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold 
+                   rounded-full shadow-md transition flex items-center gap-2 text-lg">
                             <i class="fas fa-lightbulb text-2xl"></i> Pista
                         </button>
-                        <button wire:click="pedirExplicacion"
-                            class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-full shadow-md transition flex items-center gap-2 text-lg">
+                        <button wire:click="pedirExplicacion" class="px-5 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold 
+                   rounded-full shadow-md transition flex items-center gap-2 text-lg">
                             <i class="fas fa-book-open text-2xl"></i> Explicación
                         </button>
                     </div>
 
-                    <!-- IA Feedback -->
+                    {{-- 📘 Resultados IA --}}
                     @if($pistaIA)
-                    <div
-                        class="mb-3 p-3 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-xl shadow-md">
-                        <i class="fas fa-info-circle"></i> <strong>Pista:</strong> {{ $pistaIA }}
-                    </div>
-                    @endif
-                    @if($explicacionIA)
-                    <div
-                        class="mb-3 p-3 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-xl shadow-md">
-                        <i class="fas fa-book"></i> <strong>Explicación:</strong> {{ $explicacionIA }}
+                    <div class="mb-3 p-3 bg-purple-100 dark:bg-purple-900 
+                    text-purple-800 dark:text-purple-200 
+                    rounded-xl shadow-md text-left">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Pista:</strong> {{ $pistaIA }}
                     </div>
                     @endif
 
-                    <!-- Respuesta -->
+                    @if($explicacionIA)
+                    <div class="mb-3 p-3 bg-indigo-100 dark:bg-indigo-900 
+                    text-indigo-800 dark:text-indigo-200 
+                    rounded-xl shadow-md text-left">
+                        <i class="fas fa-book"></i>
+                        <strong>Explicación:</strong> {{ $explicacionIA }}
+                    </div>
+                    @endif
+
+                    @if(isset($items[$itemIndex]['datos']['opciones']))
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        @foreach($items[$itemIndex]['datos']['opciones'] as $opcion)
+                        @php
+                        // Colores cíclicos para las opciones
+                        $colores = [
+                        'from-blue-400 to-blue-600 border-blue-600',
+                        'from-green-400 to-green-600 border-green-600',
+                        'from-purple-400 to-purple-600 border-purple-600',
+                        'from-yellow-400 to-yellow-600 border-yellow-600',
+                        'from-pink-400 to-pink-600 border-pink-600',
+                        'from-orange-400 to-orange-600 border-orange-600',
+                        ];
+                        $color = $colores[$loop->index % count($colores)];
+                        @endphp
+
+                        <button wire:click="$set('respuesta', '{{ $opcion }}')"
+                            class="relative overflow-hidden p-4 text-lg font-semibold rounded-2xl border-4 shadow-md
+                       transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none
+                       {{ $respuesta === $opcion 
+                            ? ($respuesta == $items[$itemIndex]['respuesta'] 
+                                ? 'bg-green-500 border-green-700 text-white scale-105 shadow-lg ring-4 ring-green-300'
+                                : 'bg-red-500 border-red-700 text-white scale-105 shadow-lg ring-4 ring-red-300')
+                            : 'bg-gradient-to-r '.$color.' text-white dark:from-gray-700 dark:to-gray-600 hover:opacity-90'}}">
+
+                            {{-- Efecto visual de selección --}}
+                            @if($respuesta === $opcion)
+                            <div class="absolute inset-0 bg-white opacity-10 animate-pulse"></div>
+                            @endif
+
+                            <div class="relative z-10 flex items-center justify-center gap-2">
+                                <i class="fas fa-circle text-sm opacity-80"></i> {{ $opcion }}
+                            </div>
+                        </button>
+                        @endforeach
+                    </div>
+                    @else
                     <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
                         class="w-full border-2 border-blue-400 dark:border-blue-600 rounded-full p-4 text-lg focus:ring focus:ring-green-300 dark:focus:ring-green-500 shadow-md">
+                    @endif
 
-                    @if($respuesta!==null)
-                    @if($respuesta==$items[$itemIndex]['respuesta'])
-                    <div
-                        class="mt-4 text-green-700 dark:text-green-400 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
+
+                    {{-- ✅ Retroalimentación de respuesta --}}
+                    @if($respuesta !== null)
+                    @if($respuesta == $items[$itemIndex]['respuesta'])
+                    <div class="mt-4 text-green-700 dark:text-green-400 font-bold 
+                        flex items-center justify-center gap-2 animate-bounce text-xl">
                         <i class="fas fa-check-circle text-3xl"></i> ¡Correcto!
                     </div>
                     @else
-                    <div
-                        class="mt-4 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-2 animate-bounce text-xl">
-                        <i class="fas fa-times-circle text-3xl"></i> Incorrecto: <span class="underline">{{
-                            $items[$itemIndex]['respuesta'] }}</span>
+                    <div class="mt-4 text-red-600 dark:text-red-400 font-bold 
+                        flex items-center justify-center gap-2 animate-bounce text-xl">
+                        <i class="fas fa-times-circle text-3xl"></i> Incorrecto:
+                        <span class="underline">{{ $items[$itemIndex]['respuesta'] }}</span>
                     </div>
                     @endif
                     @endif
                 </div>
+
 
                 <!-- Navegación -->
                 <div class="flex justify-between mb-4 flex-wrap gap-2">
@@ -365,7 +413,7 @@
                     <p class="mb-3 text-xl">❌ Incorrectas: <span class="font-bold text-red-600 dark:text-red-400">{{
                             $respuestasIncorrectas }}</span></p>
                     <p class="mb-5 text-xl">📊 Puntaje: <span class="font-bold text-blue-700 dark:text-blue-400">{{
-                            $puntajeFinal }}  </span></p>
+                            $puntajeFinal }} </span></p>
                 </div>
 
                 <!-- Botón cerrar -->
@@ -394,7 +442,7 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
 
             <!-- Modal -->
-            <div class="rounded-2xl block  bg-gray-100 dark:bg-gray-900 shadow-xl w-full max-w-md max-h-[95vh] overflow-y-auto p-4 sm:p-6 relative transition-colors duration-300"
+            <div class="rounded-2xl block  bg-gray-100 dark:bg-gray-900 shadow-xl w-full max-w-md max-h-[95vh] overflow-y-auto p-4 pb-36 sm:p-6 relative transition-colors duration-300"
                 style="font-size: {{ $fontSize }}px;">
 
                 <!-- Accesibilidad -->
@@ -545,24 +593,46 @@
                     </div>
                     @endif
 
-                    <!-- Respuesta -->
-                    <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
-                        class="w-full border-2 border-blue-400 dark:border-blue-600 rounded-full p-3 text-sm sm:text-base focus:ring focus:ring-green-300 dark:focus:ring-green-500 shadow">
+                    @if(isset($items[$itemIndex]['datos']['opciones']))
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        @foreach($items[$itemIndex]['datos']['opciones'] as $opcion)
+                        @php
+                        $colores = [
+                        'from-blue-400 to-blue-600 border-blue-600',
+                        'from-green-400 to-green-600 border-green-600',
+                        'from-purple-400 to-purple-600 border-purple-600',
+                        'from-yellow-400 to-yellow-600 border-yellow-600',
+                        'from-pink-400 to-pink-600 border-pink-600',
+                        'from-orange-400 to-orange-600 border-orange-600',
+                        ];
+                        $color = $colores[$loop->index % count($colores)];
+                        @endphp
 
-                    @if($respuesta!==null)
-                    @if($respuesta==$items[$itemIndex]['respuesta'])
-                    <div
-                        class="mt-3 text-green-700 dark:text-green-400 font-bold flex items-center justify-center gap-1 animate-bounce text-base sm:text-lg">
-                        <i class="fas fa-check-circle"></i> ¡Correcto!
+                        <button wire:click="$set('respuesta', '{{ $opcion }}')"
+                            class="relative overflow-hidden w-full p-4 text-lg font-semibold rounded-2xl border-4 shadow-md
+                       transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none
+                       {{ $respuesta === $opcion 
+                            ? ($respuesta == $items[$itemIndex]['respuesta'] 
+                                ? 'bg-green-500 border-green-700 text-white scale-105 shadow-lg ring-4 ring-green-300'
+                                : 'bg-red-500 border-red-700 text-white scale-105 shadow-lg ring-4 ring-red-300')
+                            : 'bg-gradient-to-r '.$color.' text-white dark:from-gray-700 dark:to-gray-600 hover:opacity-90'}}">
+
+                            {{-- Efecto visual de selección --}}
+                            @if($respuesta === $opcion)
+                            <div class="absolute inset-0 bg-white opacity-10 animate-pulse"></div>
+                            @endif
+
+                            <div class="relative z-10 flex items-center justify-center gap-2">
+                                <i class="fas fa-circle text-sm opacity-80"></i> {{ $opcion }}
+                            </div>
+                        </button>
+                        @endforeach
                     </div>
                     @else
-                    <div
-                        class="mt-3 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-1 animate-bounce text-base sm:text-lg">
-                        <i class="fas fa-times-circle"></i> Incorrecto: <span class="underline">{{
-                            $items[$itemIndex]['respuesta'] }}</span>
-                    </div>
+                    <input type="text" wire:model="respuesta" placeholder="✏️ Escribe tu respuesta..."
+                        class="w-full border-2 border-blue-400 dark:border-blue-600 rounded-full p-4 text-lg focus:ring focus:ring-green-300 dark:focus:ring-green-500 shadow-md">
                     @endif
-                    @endif
+
                 </div>
 
                 <!-- Navegación compacta -->
@@ -608,7 +678,7 @@
 
 
 
-    
+
     <style>
         .confetti {
             position: absolute;

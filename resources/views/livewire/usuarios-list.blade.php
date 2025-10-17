@@ -2,7 +2,7 @@
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
     <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Gestión de Usuarios</h2>
 
-   
+
     <div class="hidden lg:flex justify-between items-center gap-4">
         <button wire:click="abrirModalCrear"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
@@ -11,7 +11,7 @@
         <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email..." class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-full sm:w-1/3 
                dark:bg-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400">
     </div>
- 
+
     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 lg:hidden">
         <button wire:click="abrirModalCrear"
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
@@ -22,8 +22,8 @@
     </div>
 
 
- 
-     <div class="fixed top-5 right-5 space-y-2 z-50">
+
+    <div class="fixed top-5 right-5 space-y-2 z-50">
         @foreach (['create' => 'green', 'update' => 'yellow', 'delete' => 'red', 'error' => 'red'] as $type => $color)
         @if (session()->has($type))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
@@ -49,7 +49,7 @@
         <table class="w-full border-collapse rounded-lg overflow-hidden shadow-md">
             <thead>
                 <tr class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                    <th class="p-3 text-left">Foto</th>
+                    
                     <th class="p-3 text-left">Nombre</th>
                     <th class="p-3 text-left">Usuario</th>
                     <th class="p-3 text-left">Email</th>
@@ -61,15 +61,7 @@
                 @forelse ($usuarios as $usuario)
                 <tr wire:key="usuario-{{ $usuario->id }}"
                     class="border-b dark:border-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-800 transition">
-                    <td class="p-3">
-                        @if ($usuario->profile_photo_path)
-                        <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}"
-                            class="h-10 w-10 rounded-full object-cover">
-                        @else
-                        <i
-                            class="fas fa-user h-10 w-10 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
-                        @endif
-                    </td>
+                   
                     <td class="p-3">{{ $usuario->name }}</td>
                     <td class="p-3">{{ $usuario->username }}</td>
                     <td class="p-3">{{ $usuario->email ?: 'No Registrado' }}</td>
@@ -117,14 +109,7 @@
             class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-4">
-                    {{-- Foto o ícono de usuario --}}
-                    @if ($usuario->profile_photo_path)
-                    <img src="{{ asset('storage/'.$usuario->profile_photo_path) }}" alt="{{ $usuario->name }}"
-                        class="h-12 w-12 rounded-full object-cover">
-                    @else
-                    <i
-                        class="fas fa-user h-12 w-12 text-gray-400 flex items-center justify-center bg-gray-200 rounded-full text-center text-lg"></i>
-                    @endif
+                    
                     <div>
                         <h4 class="font-bold text-gray-800 dark:text-gray-100">{{ $usuario->name }}</h4>
                         <h4 class="font-bold text-gray-800 dark:text-gray-100">{{ $usuario->username }}</h4>
@@ -198,7 +183,7 @@
         </div>
     </div>
 
-  
+
     @if ($isOpen)
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
         <div
@@ -208,7 +193,7 @@
             </h2>
 
             <form wire:submit.prevent="guardar" class="space-y-4 mb-16">
-                
+
                 <div>
                     <label class="block text-gray-700 dark:text-gray-300">Nombre</label>
                     <input type="text" wire:model="form.name"
@@ -255,7 +240,7 @@
                     @error('form.role_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Cobrador: Cartera --}}
+              
                 @if ($form->role_id && \Spatie\Permission\Models\Role::find($form->role_id)?->name === 'Cobrador')
                 <div>
                     <label for="cartera_id" class="block text-gray-700 dark:text-gray-300">Asignar Cartera</label>
@@ -354,7 +339,7 @@
                             {{ $tutor->name }} ({{ $tutor->username }})
                         </li>
 
-                         
+
                         @endforeach
                     </ul>
                     @endif

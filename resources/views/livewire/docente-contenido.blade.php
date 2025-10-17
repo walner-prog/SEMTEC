@@ -243,31 +243,77 @@
                             class="w-full border rounded-lg px-2 py-1 dark:bg-gray-600 dark:text-gray-200">
                     </div>
 
-                    {{-- Ítems --}}
-                    <h4 class="font-semibold mt-4"><i class="fas fa-list"></i> Ítems</h4>
-                    <button type="button" wire:click="addItem('{{ $ind['temp_id'] }}', {{ $k }})"
-                        class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg mb-2">
-                        <i class="fas fa-plus"></i> Ítem
-                    </button>
+                 {{-- Ítems --}}
+<h4 class="font-semibold mt-4 text-gray-800 dark:text-gray-200">
+    <i class="fas fa-list"></i> Ítems
+</h4>
 
-                    @foreach($form['actividades'][$ind['temp_id']][$k]['items'] ?? [] as $m => $item)
-                    <div class="flex items-center gap-2 mt-2">
-                        <input type="text"
-                            wire:model="form.actividades.{{ $ind['temp_id'] }}.{{ $k }}.items.{{ $m }}.enunciado"
-                            placeholder="Enunciado"
-                            class="flex-1 border px-2 py-1 rounded-lg dark:bg-gray-600 dark:text-gray-200">
-                        <button type="button" wire:click="removeItem('{{ $ind['temp_id'] }}', {{ $k }}, {{ $m }})"
-                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div>
-                        <input type="text"
-                            wire:model="form.actividades.{{ $ind['temp_id'] }}.{{ $k }}.items.{{ $m }}.respuesta"
-                            placeholder="Respuesta correcta"
-                            class="w-full border px-2 py-1 rounded-lg dark:bg-gray-600 dark:text-gray-200">
-                    </div>
-                    @endforeach
+<button type="button" wire:click="addItem('{{ $ind['temp_id'] }}', {{ $k }})"
+    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg mb-2">
+    <i class="fas fa-plus"></i> Ítem
+</button>
+
+@foreach($form['actividades'][$ind['temp_id']][$k]['items'] ?? [] as $m => $item)
+<div class="border rounded-xl p-4 mb-4 bg-gradient-to-r from-blue-100 via-green-100 to-yellow-100 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 shadow-md">
+    <div class="flex items-center gap-2 mb-3">
+        <input type="text"
+            wire:model="form.actividades.{{ $ind['temp_id'] }}.{{ $k }}.items.{{ $m }}.enunciado"
+            placeholder="Enunciado de la pregunta..."
+            class="flex-1 border px-3 py-2 rounded-lg dark:bg-gray-800 dark:text-gray-200 focus:ring focus:ring-green-300">
+        <button type="button" wire:click="removeItem('{{ $ind['temp_id'] }}', {{ $k }}, {{ $m }})"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow-md">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+
+    {{-- Opciones coloridas --}}
+    <div class="ml-4 mb-3">
+        <h5 class="font-medium text-gray-800 dark:text-gray-300 mb-2">
+            <i class="fas fa-palette text-yellow-500"></i> Opciones
+        </h5>
+
+        @php
+            $colores = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-yellow-500', 'bg-pink-500', 'bg-orange-500'];
+        @endphp
+
+        @foreach($item['datos']['opciones'] ?? [] as $opIndex => $opcion)
+        @php $color = $colores[$opIndex % count($colores)]; @endphp
+        <div class="flex items-center gap-2 mb-2">
+            <div class="flex items-center gap-2 flex-1 {{ $color }} bg-opacity-90 text-white px-3 py-2 rounded-full shadow-sm">
+                <i class="fas fa-circle"></i>
+                <input type="text"
+                    wire:model="form.actividades.{{ $ind['temp_id'] }}.{{ $k }}.items.{{ $m }}.datos.opciones.{{ $opIndex }}"
+                    placeholder="Opción"
+                    class="bg-transparent border-none focus:outline-none w-full placeholder-white/80">
+            </div>
+            <button type="button"
+                wire:click="removeOpcion('{{ $ind['temp_id'] }}', {{ $k }}, {{ $m }}, {{ $opIndex }})"
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full shadow-md">
+                ✕
+            </button>
+        </div>
+        @endforeach
+
+        <button type="button" wire:click="addOpcion('{{ $ind['temp_id'] }}', {{ $k }}, {{ $m }})"
+            class="mt-2 text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full shadow-md">
+            <i class="fas fa-plus"></i> Agregar opción
+        </button>
+    </div>
+
+    {{-- Respuesta correcta --}}
+    <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <i class="fas fa-check-circle text-green-500"></i> Respuesta correcta
+        </label>
+        <input type="text"
+            wire:model="form.actividades.{{ $ind['temp_id'] }}.{{ $k }}.items.{{ $m }}.respuesta"
+            placeholder="Respuesta correcta"
+            class="w-full border px-3 py-2 rounded-lg dark:bg-gray-800 dark:text-gray-200 focus:ring focus:ring-green-300">
+    </div>
+</div>
+@endforeach
+
+
 
                     {{-- Tiempo --}}
                     <div class="mt-3">
@@ -330,12 +376,12 @@
             dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen rounded-2xl">
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
 
 
             <div class="lg:col-span-9 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition">
                 <div class="block lg:hidden p-4 space-y-3">
-                    
+
                     <div x-data="{ open: false }" class="mb-3">
                         <button @click="open = !open"
                             class="w-full flex justify-between items-center px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg shadow">
@@ -345,11 +391,11 @@
                         <div x-show="open" x-transition
                             class="mt-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow space-y-3 border dark:border-gray-700">
 
-                           
+
                             <input type="text" wire:model.live="search" placeholder="🔍 Buscar por título..."
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
 
-                            
+
                             <select wire:model.live="grado_id"
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
                                 <option value="">Todos los grados</option>
@@ -358,7 +404,7 @@
                                 @endforeach
                             </select>
 
-                          
+
                             <select wire:model.live="perPage"
                                 class="border rounded-lg px-3 py-2 w-full dark:bg-gray-900 dark:text-white text-sm">
                                 <option value="100">100 por página</option>
@@ -516,7 +562,7 @@
                     </table>
                 </div>
 
-              
+
                 <div
                     class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="text-gray-600 dark:text-gray-300 text-sm">

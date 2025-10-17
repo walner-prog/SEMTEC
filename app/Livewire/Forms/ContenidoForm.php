@@ -72,7 +72,8 @@ class ContenidoForm
                                 'actividad_id' => $actividad->id,
                                 'enunciado' => $item['enunciado'],
                                 'respuesta' => $item['respuesta'] ?? null,
-                                'datos' => $item['datos'] ?? null,
+                                 
+                                'datos' => isset($item['datos']) ? json_encode($item['datos']) : null,
                                 'retro' => $item['retro'] ?? null,
                                 'orden' => $item['orden'] ?? ($i + 1),
                             ]);

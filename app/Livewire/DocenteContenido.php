@@ -183,7 +183,28 @@ class DocenteContenido extends Component
     }
     public function addItem($indTempId, $actIndex)
     {
-        $this->form['actividades'][$indTempId][$actIndex]['items'][] = ['enunciado' => '', 'orden' => count($this->form['actividades'][$indTempId][$actIndex]['items']) + 1];
+        $this->form['actividades'][$indTempId][$actIndex]['items'][] = [
+            'enunciado' => '',
+            'respuesta' => '',
+            'orden' => count($this->form['actividades'][$indTempId][$actIndex]['items']) + 1,
+            'datos' => [
+                'tipo' => 'texto',
+                'opciones' => []
+            ]
+        ];
+    }
+
+    public function addOpcion($indTempId, $actIndex, $itemIndex)
+    {
+        $this->form['actividades'][$indTempId][$actIndex]['items'][$itemIndex]['datos']['opciones'][] = '';
+    }
+
+    public function removeOpcion($indTempId, $actIndex, $itemIndex, $opcionIndex)
+    {
+        unset($this->form['actividades'][$indTempId][$actIndex]['items'][$itemIndex]['datos']['opciones'][$opcionIndex]);
+        $this->form['actividades'][$indTempId][$actIndex]['items'][$itemIndex]['datos']['opciones'] = array_values(
+            $this->form['actividades'][$indTempId][$actIndex]['items'][$itemIndex]['datos']['opciones']
+        );
     }
 
 
@@ -214,7 +235,7 @@ class DocenteContenido extends Component
     public function render()
     {
         $query = Unidad::with('grado')
-            ->where('docente_id', auth()->id())  
+            ->where('docente_id', auth()->id())
             ->orderBy('orden');
 
         if ($this->search) {

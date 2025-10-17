@@ -202,12 +202,12 @@ class EstudianteContenido extends Component
             'fecha_revision' => now()
         ]);
 
-        // 🔹 Guardar resultados en propiedades
+    
         $this->respuestasCorrectas = $intento->aciertos;
         $this->respuestasIncorrectas = $intento->errores;
         $this->puntajeFinal = $intento->puntaje;
         $this->actividadFinalizada = true;
-        $this->mount(); // Recargar actividades para actualizar estado
+        $this->mount();  
     }
 
     public function cerrarModal()
@@ -226,7 +226,7 @@ class EstudianteContenido extends Component
             'respuestasIncorrectas',
             'puntajeFinal'
         ]);
-        $this->mount(); // Recargar actividades
+        $this->mount();  
     }
 
     public function render()
