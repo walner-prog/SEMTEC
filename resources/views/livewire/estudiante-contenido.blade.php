@@ -115,7 +115,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="fas fa-heart text-red-500"></i>
-                        Cuida tu progreso: estudia un poco cada día 💡
+                        Cuida tu progreso: estudia un poco cada día 
                     </li>
                 </ul>
             </div>
