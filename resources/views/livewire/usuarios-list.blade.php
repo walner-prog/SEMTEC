@@ -8,6 +8,8 @@
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-md transition">
             + Nuevo Usuario
         </button>
+
+       
         <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email..." class="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 w-full sm:w-1/3 
                dark:bg-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400">
     </div>

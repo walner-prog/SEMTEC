@@ -37,6 +37,8 @@
                 <option value="{{ $option }}">Mostrar {{ $option }}</option>
             @endforeach
         </select>
+
+         <livewire:import-estudiantes />
     </div>
 
     <!-- 🔸 Tabla de estudiantes -->
@@ -133,6 +135,8 @@
                     <option value="{{ $option }}">Mostrar {{ $option }}</option>
                     @endforeach
                 </select>
+
+                  <livewire:import-estudiantes />
             </div>
         </div>
 
